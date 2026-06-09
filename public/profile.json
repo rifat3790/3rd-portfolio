@@ -1,0 +1,187 @@
+{
+  "name": "MD. REFAYET HOSSEN",
+  "father_name": "Rofiqul Islam",
+  "mother_name": "Muslima Khatun",
+
+  "email": "mdrifayethossen@gmail.com",
+  "phone": "01952321390",
+
+  "current_location": "Dhaka, Mirpur-2, opposite Stadium Gate-2",
+  "permanent_address": "Kaliganj, Satkhira",
+  "home_village": "Satkhira, Kaliganj, Shitulpur",
+
+  "links": {
+    "linkedin": "https://linkedin.com/in/md-refayethossen-62b796236",
+    "github": "https://github.com/rifat3790",
+    "project_repo": "https://github.com/rifat3790/Integrated-Healthcare-Support-System-IHSS-.git",
+    "green_health_live": "https://health-fairs-664ee.web.app/"
+  },
+
+  "profile": "Full-stack web developer and team leader with strong experience in building scalable, high-performance web applications. Specialized in React, Next.js, Node.js, MySQL, and modern UI frameworks. Currently working at a software agency where I lead development projects, build custom Shopify solutions using Liquid, and collaborate with cross-functional teams to deliver business-focused digital products. Also experienced with Shopify, WordPress, and Wix.",
+
+  "current_position": {
+    "role": "Web Developer & Team Leader",
+    "company": "Softvence Agency",
+    "start_date": "October 2025",
+    "status": "Currently Working",
+    "responsibilities": [
+      "Develop and maintain modern web applications using React, Next.js, and Node.js",
+      "Design, customize, and optimize Shopify stores using Liquid, JSON templates, and Shopify theme architecture",
+      "Develop custom Shopify sections, snippets, and reusable components",
+      "Implement Shopify theme customization, performance optimization, and responsive layouts",
+      "Lead a small development team and manage task distribution",
+      "Coordinate with clients to gather requirements and deliver scalable, business-driven solutions",
+      "Ensure code quality, performance optimization, SEO best practices, and cross-device compatibility"
+    ]
+  },
+
+  "skills": {
+    "frontend": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "React",
+      "Next.js",
+      "Tailwind CSS",
+      "DaisyUI",
+      "Shopify",
+      "Liquid",
+      "WordPress",
+      "Wix"
+    ],
+    "backend": [
+      "Node.js",
+      "MySQL",
+      "Express.js"
+    ],
+    "programming": [
+      "C",
+      "Java",
+      "Python",
+      "PHP",
+      "MySQL"
+    ],
+    "tools": [
+      "Git",
+      "Postman",
+      "Firebase",
+      "Shopify Admin",
+      "Shopify CLI"
+    ],
+    "soft": [
+      "Quick Learner",
+      "Communication",
+      "Leadership",
+      "Team Collaboration",
+      "Problem Solving"
+    ]
+  },
+
+  "education": [
+    {
+      "degree": "B.Sc. in Computer Science and Engineering",
+      "institute": "Green University of Bangladesh",
+      "cgpa": "3.75",
+      "years": "2022 – Present",
+      "city": "Kanchon, Narayanganj"
+    }
+  ],
+
+  "experience": [
+    {
+      "role": "Web Developer & Team Leader",
+      "org": "Softvence Agency",
+      "years": "October 2025 – Present",
+      "city": "Dhaka, Bangladesh",
+      "highlights": [
+        "Lead full-stack and Shopify-based projects for international and local clients",
+        "Develop custom Shopify themes, sections, and Liquid-based features",
+        "Build scalable web applications using React, Next.js, Node.js, and MySQL",
+        "Manage team workflow, code reviews, and client communication"
+      ]
+    },
+    {
+      "role": "Software Developer",
+      "org": "Sardar IT",
+      "years": "January 2025 – September 2025",
+      "city": "Dhaka, Bangladesh",
+      "highlights": [
+        "Developed and maintained client websites using React, Next.js, Express.js, and MySQL",
+        "Worked on backend APIs, database integration, and performance optimization",
+        "Delivered responsive, SEO-friendly, and user-centric web solutions"
+      ]
+    },
+    {
+      "role": "Moderator",
+      "org": "Farid Publication",
+      "years": "January 2025 – Present",
+      "city": "Dhaka, Bangladesh",
+      "highlights": [
+        "Handled customer orders and fulfillment processes",
+        "Maintained order records and operational documentation",
+        "Provided consistent client communication and support"
+      ]
+    }
+  ],
+
+  "projects": [
+    {
+      "name": "Integrated Healthcare Support System (IHSS)",
+      "stack": [
+        "Next.js",
+        "Express.js",
+        "MySQL"
+      ],
+      "features": [
+        "Secure authentication system",
+        "Doctor-wise appointment booking",
+        "Digital prescription and medical report upload",
+        "Face verification with discount system",
+        "Admin dashboard for system management"
+      ]
+    },
+    {
+      "name": "Green Health Care",
+      "stack": [
+        "React",
+        "Firebase"
+      ],
+      "features": [
+        "Firebase authentication",
+        "Fully responsive user interface",
+        "Health workshops, fitness programs, screenings, and resources"
+      ]
+    }
+  ],
+
+  "faqs": [
+    {
+      "q": "What is your email?",
+      "a": "mdrifayethossen@gmail.com"
+    },
+    {
+      "q": "What is your phone number?",
+      "a": "01952321390"
+    },
+    {
+      "q": "What are your core skills?",
+      "a": "React, Next.js, Node.js, MySQL, Tailwind CSS, Shopify (Liquid & Theme Development), WordPress, and Wix."
+    },
+    {
+      "q": "Where are you currently working?",
+      "a": "I am currently working at Softvence Agency as a Web Developer and Team Leader."
+    },
+    {
+      "q": "Do you have Shopify experience?",
+      "a": "Yes, I have hands-on experience in Shopify theme development, Liquid templating, custom sections, and store optimization."
+    },
+    {
+      "q": "Where do you live?",
+      "a": "I currently live in Mirpur-2, Dhaka, and my permanent address is Kaliganj, Satkhira."
+    },
+    {
+      "q": "Tell me about IHSS",
+      "a": "IHSS is built with Next.js, Express.js, and MySQL. It includes secure authentication, doctor appointment booking, digital prescriptions, face verification discounts, and an admin dashboard."
+    }
+  ]
+}

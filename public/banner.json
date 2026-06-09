@@ -1,0 +1,18 @@
+[
+  {
+    "stats": [
+      { "label": "Years Experience", "value": "2+" },
+      { "label": "Projects Done", "value": "6+" },
+      { "label": "Technologies", "value": "31+" }
+    ],
+    "socialLinks": [
+      { "platform": "facebook", "url": "https://www.facebook.com/Rifayet221/" },
+      {
+        "platform": "linkedin",
+        "url": "https://www.linkedin.com/in/md-refayet-hossen-62b796236/"
+      },
+      { "platform": "twitter", "url": "https://twitter.com" },
+      { "platform": "github", "url": "https://github.com/rifat3790" }
+    ]
+  }
+]

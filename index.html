@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- SEO Optimization -->
+    <title>Rifat | Premium Personal Portfolio & AI Architect</title>
+    <meta name="description" content="Explore the premium portfolio of Rifat: Full Stack Developer, Shopify Architect, and UI Engineer. Featuring custom resume builders, AI portfolio assistant, and SaaS-grade web applications." />
+    
+    <!-- OpenGraph/Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Rifat | Premium Personal Portfolio & AI Architect" />
+    <meta property="og:description" content="Discover enterprise-grade React, TypeScript, and Shopify architectures with interactive tools, AI assistants, and high-fidelity designs." />
+    
+    <!-- Google Fonts Connection -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    
+    <style>
+      /* Fallback static page loader styles */
+      #initial-loader {
+        position: fixed;
+        inset: 0;
+        background-color: #0A0A0C;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 99999;
+        transition: opacity 0.5s ease;
+        font-family: 'Outfit', sans-serif;
+      }
+      .loader-spinner {
+        width: 48px;
+        height: 48px;
+        border: 3px solid rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+        border-top-color: #A78BFA;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      .loader-logo {
+        margin-top: 1.5rem;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #F3F4F6;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        animation: pulse 2s infinite ease-in-out;
+      }
+      @keyframes pulse {
+        0%, 100% { opacity: 0.5; }
+        50% { opacity: 1; }
+      }
+    </style>
+  </head>
+  <body class="bg-lightbg dark:bg-darkbg text-slate-800 dark:text-slate-200 antialiased overflow-x-hidden selection:bg-purple-500/30 selection:text-purple-300">
+    <!-- Initial Loading Screen -->
+    <div id="initial-loader">
+      <div class="loader-spinner"></div>
+      <div class="loader-logo">Rifat Portfolio</div>
+    </div>
+
+    <div id="root"></div>
+
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Clear loader once page imports compile and mount
+      window.addEventListener('load', () => {
+        const loader = document.getElementById('initial-loader');
+        if (loader) {
+          loader.style.opacity = '0';
+          setTimeout(() => loader.remove(), 500);
+        }
+      });
+    </script>
+  </body>
+</html>

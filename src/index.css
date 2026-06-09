@@ -1,0 +1,202 @@
+@import "tailwindcss";
+
+@theme {
+  --color-accent: rgb(var(--color-accent-rgb));
+  --color-accent-hover: rgb(var(--color-accent-hover-rgb));
+  --color-accent-glow: rgb(var(--color-accent-rgb) / 0.15);
+  
+  --color-darkbg: #020203;
+  --color-darkcard: #08080a;
+  --color-darkborder: #121214;
+  --color-lightbg: #fafafc;
+  --color-lightcard: #ffffff;
+  --color-lightborder: #e2e8f0;
+
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-delayed: float 6s ease-in-out infinite 3s;
+  --animate-glow-line: glow-line 3s linear infinite;
+
+  --shadow-glass-dark: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  --shadow-glass-light: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+  }
+  @keyframes glow-line {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+}
+
+/* Root Variables for Premium Accent Colors & Dark/Light Themes */
+:root {
+  /* Default violet accent: 139 92 246 (violet-500) */
+  --color-accent-rgb: 139 92 246;
+  --color-accent-hover-rgb: 124 58 237; /* violet-600 */
+  
+  --font-display: 'Outfit', sans-serif;
+  --font-sans: 'Inter', sans-serif;
+}
+
+/* Base resets & configurations */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+}
+
+/* Glassmorphism custom classes */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
+}
+
+.dark .glass-panel {
+  background: rgba(6, 6, 8, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Active premium button & tab highlight classes */
+.btn-active-premium {
+  background-color: rgb(var(--color-accent-rgb)) !important;
+  border-color: rgb(var(--color-accent-rgb)) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 22px 3px rgba(var(--color-accent-rgb), 0.38) !important;
+  transform: scale(1.02);
+}
+
+.tab-active-premium {
+  background-color: rgba(var(--color-accent-rgb), 0.14) !important;
+  border-color: rgba(var(--color-accent-rgb), 0.3) !important;
+  color: rgb(var(--color-accent-rgb)) !important;
+  box-shadow: 0 0 15px 1px rgba(var(--color-accent-rgb), 0.08) !important;
+}
+
+/* Glow Border & Spotlight Effects */
+.glow-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.glow-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(135deg, rgba(var(--color-accent-rgb), 0.4), transparent 50%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.glow-card:hover::before {
+  opacity: 1;
+}
+
+/* Particle and gradient mesh backgrounds */
+.mesh-bg {
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(var(--color-accent-rgb), 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(56, 189, 248, 0.06) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(244, 63, 94, 0.04) 0px, transparent 50%);
+}
+
+.dark .mesh-bg {
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(var(--color-accent-rgb), 0.12) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(14, 165, 233, 0.08) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(var(--color-accent-rgb), 0.06) 0px, transparent 50%);
+}
+
+/* Custom premium scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.25);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(75, 85, 99, 0.4);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(var(--color-accent-rgb), 0.4);
+}
+
+/* Print Styles for resume exports */
+@media print {
+  /* Hide all normal body elements from showing */
+  body * {
+    visibility: hidden;
+  }
+  
+  /* Ensure the printable area and all its subelements are visible */
+  #resume-printable-area, #resume-printable-area * {
+    visibility: visible;
+  }
+
+  /* Reset layout constraints and offsets on ancestors so absolute positioning is relative to the page root */
+  html, body, #root, main, div, section, article {
+    position: static !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+  
+  /* Absolute position the printable page to take up the full print area */
+  #resume-printable-area {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}

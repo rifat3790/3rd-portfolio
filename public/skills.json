@@ -1,0 +1,15 @@
+[
+  { "id": 1, "category": "Frontend", "name": "React", "proficiency": 90, "icon": "FaCode", "projectsUsed": 8 },
+  { "id": 2, "category": "Frontend", "name": "Next.js", "proficiency": 85, "icon": "FaCode", "projectsUsed": 6 },
+  { "id": 3, "category": "Frontend", "name": "TypeScript", "proficiency": 50, "icon": "FaCode", "projectsUsed": 4 },
+  { "id": 4, "category": "Frontend", "name": "Tailwind CSS", "proficiency": 95, "icon": "FaCode", "projectsUsed": 7 },
+  { "id": 5, "category": "Backend", "name": "Node.js", "proficiency": 50, "icon": "FaServer", "projectsUsed": 5 },
+  { "id": 6, "category": "Backend", "name": "Express.js", "proficiency": 80, "icon": "FaServer", "projectsUsed": 5 },
+  { "id": 7, "category": "Database", "name": "MySQL", "proficiency": 80, "icon": "FaDatabase", "projectsUsed": 3 },
+  { "id": 8, "category": "Database", "name": "MongoDB", "proficiency": 70, "icon": "FaDatabase", "projectsUsed": 2 },
+  { "id": 9, "category": "Tools", "name": "Git", "proficiency": 85, "icon": "FaWrench", "projectsUsed": 10 },
+  { "id": 10, "category": "Tools", "name": "Postman", "proficiency": 80, "icon": "FaWrench", "projectsUsed": 4 },
+  { "id": 11, "category": "Tools", "name": "Shopify", "proficiency": 95, "icon": "FaWrench", "projectsUsed": 10 },
+  { "id": 12, "category": "Tools", "name": "WordPress", "proficiency": 90, "icon": "FaWrench", "projectsUsed": 6 },
+  { "id": 13, "category": "Tools", "name": "Wix", "proficiency": 90, "icon": "FaWrench", "projectsUsed": 2 }
+]
