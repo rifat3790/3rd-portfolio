@@ -1,9 +1,13 @@
 import { ShoppingBag, Code, Zap, Check, ArrowRight } from 'lucide-react';
-import { SERVICES } from '../../data/portfolioData';
+import { SERVICES as servicesEn } from '../../data/portfolioData';
+import { SERVICES as servicesBn } from '../../data/portfolioDataBn';
+import { useTranslation } from '../../hooks/useTranslation';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 
 export const Services = () => {
+  const { t, language } = useTranslation();
+  const SERVICES = language === 'en' ? servicesEn : servicesBn;
 
   const getServiceIcon = (name: string) => {
     switch (name) {
@@ -39,10 +43,10 @@ export const Services = () => {
         {/* SECTION HEADER */}
         <div className="flex flex-col items-center text-center gap-3">
           <span className="text-xs uppercase tracking-widest font-extrabold text-accent font-display">
-            My Services
+            {t('services.badge')}
           </span>
           <h2 className="text-3xl sm:text-4xl font-black font-display tracking-tight text-slate-900 dark:text-white">
-            Solutions Offered & Pricing
+            {t('services.title')}
           </h2>
           <div className="w-12 h-1 bg-accent rounded-full mt-1" />
         </div>
@@ -63,7 +67,9 @@ export const Services = () => {
                   {getServiceIcon(serv.iconName)}
                 </div>
                 <div className="text-right">
-                  <span className="text-xs text-slate-400 dark:text-zinc-500 font-mono">Rates from</span>
+                  <span className="text-xs text-slate-400 dark:text-zinc-500 font-mono">
+                    {language === 'en' ? 'Rates from' : 'রেট শুরু'}
+                  </span>
                   <h3 className="text-xl font-black font-display text-accent mt-0.5">{serv.price}</h3>
                 </div>
               </div>
@@ -77,14 +83,14 @@ export const Services = () => {
                   {serv.description}
                 </p>
                 <span className="text-[10px] font-mono text-slate-400 dark:text-zinc-500 mt-1">
-                  Delivery: <strong className="text-slate-600 dark:text-zinc-300">{serv.delivery}</strong>
+                  {language === 'en' ? 'Delivery:' : 'ডেলিভারি:'} <strong className="text-slate-600 dark:text-zinc-300">{serv.delivery}</strong>
                 </span>
               </div>
 
               {/* Process Checklist */}
               <div className="flex flex-col gap-3.5 border-t border-slate-100 dark:border-zinc-800/80 pt-5 mb-8 text-left">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 font-display">
-                  Working Process
+                  {language === 'en' ? 'Working Process' : 'কাজের ধাপ'}
                 </span>
                 <ul className="flex flex-col gap-2">
                   {serv.process.map((step) => (
@@ -104,7 +110,7 @@ export const Services = () => {
                 iconPosition="right"
                 onClick={() => handleServiceSelect(serv.title)}
               >
-                Inquire Service
+                {language === 'en' ? 'Inquire Service' : 'যোগাযোগ করুন'}
               </Button>
 
             </Card>

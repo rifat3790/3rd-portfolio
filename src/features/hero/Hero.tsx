@@ -6,23 +6,30 @@ import { usePortfolioStore } from '../../store/usePortfolioStore';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { ThreeBgCanvas } from '../../components/ui/ThreeBgCanvas';
+import { useTranslation } from '../../hooks/useTranslation';
 
-const SPECIALTIES = ['Full Stack Developer', 'Shopify Architect', 'UI Engineer', 'React Developer'];
+const SPECIALTIES = {
+  en: ['Full Stack Developer', 'Shopify Architect', 'UI Engineer', 'React Developer'],
+  bn: ['ফুল স্ট্যাক ডেভেলপার', 'শপিফাই আর্কিটেক্ট', 'ইউআই (UI) ইঞ্জিনিয়ার', 'রিঅ্যাক্ট ডেভেলপার']
+};
 
 export const Hero = () => {
   const [specialtyIndex, setSpecialtyIndex] = useState(0);
   const [schedulerOpen, setSchedulerOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
+  const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   
   const headingRef = useRef<HTMLHeadingElement>(null);
   const { incrementAnalytics, addNotification } = usePortfolioStore();
+  const { t, language } = useTranslation();
 
   // Specialty cycler
   useEffect(() => {
     const timer = setInterval(() => {
-      setSpecialtyIndex((prev) => (prev + 1) % SPECIALTIES.length);
+      setSpecialtyIndex((prev) => (prev + 1) % 4);
     }, 3000);
     return () => clearInterval(timer);
   }, []);
@@ -66,7 +73,7 @@ export const Hero = () => {
     addNotification('CV download started!', 'success', 'CV Downloaded');
     const link = document.createElement('a');
     link.href = '/resume.pdf';
-    link.download = 'Refayet_Hossen_CV.pdf';
+    link.download = 'Md_Refayet_Hossen_CV.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -74,18 +81,43 @@ export const Hero = () => {
 
   const handleBooking = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedDate || !selectedTime) {
-      addNotification('Please choose both a date and time slot.', 'error', 'Incomplete Form');
+    if (!selectedDate || !selectedTime || !email.trim()) {
+      addNotification('Please choose a date, time slot, and enter your email.', 'error', 'Incomplete Form');
       return;
     }
-    setBookingConfirmed(true);
-    addNotification(`Meeting scheduled for ${selectedDate} at ${selectedTime}! 📅`, 'success', 'Meeting Scheduled');
-    setTimeout(() => {
-      setSchedulerOpen(false);
-      setBookingConfirmed(false);
-      setSelectedDate('');
-      setSelectedTime('');
-    }, 2000);
+    
+    setIsSubmitting(true);
+    
+    fetch('https://formsubmit.co/ajax/mdrifayethossen@gmail.com', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        email,
+        selectedDate,
+        selectedTime,
+        _subject: `New Meeting Request from ${email}`
+      })
+    })
+    .then(response => response.json())
+    .then(() => {
+      setBookingConfirmed(true);
+      addNotification(`Meeting requested for ${selectedDate} at ${selectedTime}! 📅`, 'success', 'Request Sent');
+      setTimeout(() => {
+        setSchedulerOpen(false);
+        setBookingConfirmed(false);
+        setSelectedDate('');
+        setSelectedTime('');
+        setEmail('');
+        setIsSubmitting(false);
+      }, 3000);
+    })
+    .catch(() => {
+      setIsSubmitting(false);
+      addNotification('Failed to schedule meeting. Please try again or use direct email.', 'error', 'Transmission Failed');
+    });
   };
 
   const handleContactScroll = () => {
@@ -118,7 +150,7 @@ export const Hero = () => {
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 dark:bg-emerald-500/5 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-semibold"
           >
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Available for projects & roles</span>
+            <span>{t('hero.badge')}</span>
           </motion.div>
 
           {/* Heading */}
@@ -129,43 +161,32 @@ export const Hero = () => {
               transition={{ duration: 0.4, delay: 0.2 }}
               className="text-sm uppercase tracking-widest font-extrabold text-slate-500 dark:text-zinc-500 font-display"
             >
-              Creative UI Engineer
+              {t('hero.role')}
             </motion.h4>
             <h1 
               ref={headingRef}
               className="text-4xl sm:text-5xl lg:text-6xl font-black font-display tracking-tight text-slate-900 dark:text-white leading-[1.1] [perspective:1000px]"
             >
-              <span className="inline-block char-reveal opacity-0">H</span>
-              <span className="inline-block char-reveal opacity-0">i</span>
-              <span className="inline-block char-reveal opacity-0">,</span>
-              <span className="inline-block char-reveal opacity-0">&nbsp;</span>
-              <span className="inline-block char-reveal opacity-0">I</span>
-              <span className="inline-block char-reveal opacity-0">'</span>
-              <span className="inline-block char-reveal opacity-0">m</span>
-              <span className="inline-block char-reveal opacity-0">&nbsp;</span>
-              <span className="bg-gradient-to-r from-accent to-cyan-500 bg-clip-text text-transparent">
-                {Array.from("Refayet Hossen").map((char, index) => (
-                  <span key={index} className="inline-block char-reveal opacity-0">
-                    {char === ' ' ? '\u00A0' : char}
-                  </span>
-                ))}
+              <span className="inline-block char-reveal opacity-0 mr-2">{t('hero.greeting')}</span>
+              <span className="bg-gradient-to-r from-accent to-cyan-500 bg-clip-text text-transparent inline-block char-reveal opacity-0">
+                {t('hero.name')}
               </span>
             </h1>
 
             {/* Specialty Rotating Text */}
             <div className="h-10 sm:h-12 overflow-hidden flex items-center gap-2 mt-1">
-              <span className="text-xl sm:text-2xl font-bold text-slate-700 dark:text-zinc-300 font-display">Specializing in</span>
+              <span className="text-xl sm:text-2xl font-bold text-slate-700 dark:text-zinc-300 font-display">{t('hero.specializing')}</span>
               <div className="relative h-full flex-1 min-w-[200px]">
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={specialtyIndex}
-                    initial={{ y: 25, opacity: 0 }}
+                    initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -25, opacity: 0 }}
-                    transition={{ type: 'spring', stiffness: 200, damping: 18 }}
-                    className="absolute left-0 text-xl sm:text-2xl font-extrabold text-accent font-display"
+                    exit={{ y: -20, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="font-mono text-accent text-lg sm:text-xl md:text-2xl font-bold tracking-tight"
                   >
-                    {SPECIALTIES[specialtyIndex]}
+                    {SPECIALTIES[language][specialtyIndex]}
                   </motion.span>
                 </AnimatePresence>
               </div>
@@ -178,7 +199,7 @@ export const Hero = () => {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="text-sm sm:text-base text-slate-600 dark:text-zinc-400 leading-relaxed max-w-2xl"
           >
-            I engineer high-fidelity web frontends and customize Shopify headless portals with scalable architectures. Bridging the gap between beautiful aesthetics and enterprise performance.
+            {t('hero.description')}
           </motion.p>
 
           {/* Call to actions row */}
@@ -196,7 +217,7 @@ export const Hero = () => {
               onMouseMove={handleButtonMagnet}
               onMouseLeave={handleButtonMagnetReset}
             >
-              Hire Me
+              {t('hero.hireMe')}
             </Button>
             <Button 
               variant="glass" 
@@ -204,7 +225,7 @@ export const Hero = () => {
               onMouseMove={handleButtonMagnet}
               onMouseLeave={handleButtonMagnetReset}
             >
-              Explore Work
+              {t('hero.exploreWork')}
             </Button>
             <Button 
               variant="outline" 
@@ -213,7 +234,7 @@ export const Hero = () => {
               onMouseMove={handleButtonMagnet}
               onMouseLeave={handleButtonMagnetReset}
             >
-              Download CV
+              {t('hero.downloadCV')}
             </Button>
             <Button 
               variant="secondary" 
@@ -222,7 +243,7 @@ export const Hero = () => {
               onMouseMove={handleButtonMagnet}
               onMouseLeave={handleButtonMagnetReset}
             >
-              Schedule Call
+              {t('hero.bookCall')}
             </Button>
           </motion.div>
 
@@ -235,15 +256,15 @@ export const Hero = () => {
           >
             <div>
               <h3 className="text-2xl sm:text-3xl font-black font-display text-slate-900 dark:text-white">5+</h3>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 mt-1">Years Exp</p>
+              <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 mt-1">{t('hero.stat.years')}</p>
             </div>
             <div>
               <h3 className="text-2xl sm:text-3xl font-black font-display text-slate-900 dark:text-white">15+</h3>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 mt-1">Projects Done</p>
+              <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 mt-1">{t('hero.stat.projects')}</p>
             </div>
             <div>
               <h3 className="text-2xl sm:text-3xl font-black font-display text-slate-900 dark:text-white">100%</h3>
-              <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 mt-1">Lighthouse Speed</p>
+              <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 mt-1">{t('hero.stat.speed')}</p>
             </div>
           </motion.div>
 
@@ -285,11 +306,11 @@ export const Hero = () => {
               {/* Card Meta details */}
               <div className="flex flex-col gap-1.5">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-bold font-display text-slate-800 dark:text-zinc-100">Refayet Hossen</h3>
+                  <h3 className="text-lg font-bold font-display text-slate-800 dark:text-zinc-100">{t('hero.name')}</h3>
                   <span className="text-[10px] bg-accent/10 text-accent font-semibold px-2 py-0.5 rounded-full">HQ: Dhaka</span>
                 </div>
                 <p className="text-xs text-slate-500 dark:text-zinc-500">
-                  Senior Full Stack & Shopify Developer
+                  {t('hero.developer')}
                 </p>
                 <div className="flex gap-2 items-center text-[10px] text-slate-400 dark:text-zinc-500 font-mono mt-1">
                   <span>commits: 2.1k+</span>
@@ -383,6 +404,20 @@ export const Hero = () => {
 
                   <div className="flex flex-col gap-1.5">
                     <label className="text-[10px] font-bold uppercase tracking-wider text-accent dark:text-accent font-display">
+                      Your Email
+                    </label>
+                    <input
+                      required
+                      type="email"
+                      value={email}
+                      placeholder="john@example.com"
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="px-4 py-2.5 rounded-xl bg-slate-50/50 dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-850 text-xs text-slate-800 dark:text-zinc-200 focus:outline-none focus:border-accent dark:focus:border-accent focus:ring-2 focus:ring-accent/10 transition-all w-full"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-accent dark:text-accent font-display">
                       Select Date
                     </label>
                     <input
@@ -417,8 +452,8 @@ export const Hero = () => {
                     </div>
                   </div>
 
-                  <Button type="submit" variant="primary" className="w-full mt-2.5 py-3 font-semibold text-xs tracking-wider uppercase">
-                    Confirm Booking
+                  <Button type="submit" variant="primary" className="w-full mt-2.5 py-3 font-semibold text-xs tracking-wider uppercase" disabled={isSubmitting}>
+                    {isSubmitting ? 'Sending Request...' : 'Confirm Booking'}
                   </Button>
                 </form>
               )}

@@ -66,60 +66,60 @@ interface ResumeState {
 
 const DEFAULT_RESUME: ResumeData = {
   personalInfo: {
-    fullName: 'Refayet Hossen',
-    jobTitle: 'Senior Full Stack & Shopify UI Engineer',
-    email: 'refayet.hossen@example.com',
-    phone: '+880 1700-000000',
-    website: 'https://refayet-dev.com',
+    fullName: 'MD. REFAYET HOSSEN',
+    jobTitle: 'Web Developer',
+    email: 'mdrifayethossen@gmail.com',
+    phone: '01568777237, 01952321390',
+    website: 'https://mdrifayet.com',
     github: 'https://github.com/refayet-dev',
     linkedin: 'https://linkedin.com/in/refayet-dev',
     location: 'Dhaka, Bangladesh',
-    summary: 'Innovative software engineer with 5+ years of experience designing and optimizing SaaS applications, high-performance Shopify custom storefronts, and React + TS applications. Expert in responsive interface designs and headless architectures.',
+    summary: 'Passionate and detail-focused Full Stack Developer with experience in developing responsive and interactive web applications using HTML, CSS, JavaScript, React, Next.js and Node.js. Skilled in designing modern UI with Tailwind CSS and DaisyUI, managing databases using MySQL, and implementing secure authentication systems with bcrypt. Quick to learn new technologies and committed to continuous skill development.',
   },
   experience: [
     {
       id: 'exp-1',
-      company: 'AppVenture Solutions',
-      role: 'Lead React Developer',
-      location: 'Remote',
-      duration: '2024 - Present',
-      bullets: [
-        'Architected clean-code state architecture with Zustand and React Query, boosting page response speeds by 35%.',
-        'Led a crew of 4 developers to build a SaaS visual-form builder module, generating $80k in additional annual recurring revenue.',
-        'Implemented rigorous automated unit test suites covering 85%+ code paths in our core billing systems.'
-      ]
+      company: 'Sardar IT',
+      role: 'Web Developer',
+      location: 'Dhaka, Mirpur-2',
+      duration: '06/2025 - 10/2025',
+      bullets: []
     },
     {
       id: 'exp-2',
-      company: 'Shopify Craft Studios',
-      role: 'Shopify Storefront Specialist',
-      location: 'Dhaka',
-      duration: '2022 - 2024',
-      bullets: [
-        'Developed 12 headless Shopify stores using Hydrogen, React, and GraphQL APIs to facilitate custom merchant workflows.',
-        'Audited and refactored heritage liquid templates, accelerating core web vitals by 45% and conversion rates by 2.1%.'
-      ]
+      company: 'Softvence Agency',
+      role: 'Web Developer and Team Leader',
+      location: 'Mohakhali',
+      duration: '11/2025 - Present',
+      bullets: []
     }
   ],
   education: [
     {
       id: 'edu-1',
-      school: 'University of Engineering and Technology',
-      degree: 'B.Sc. in Computer Science & Engineering',
-      duration: '2018 - 2022',
-      grade: 'CGPA 3.82 / 4.00'
+      school: 'Green University of Bangladesh',
+      degree: 'B.Sc., Computer Science and Engineering',
+      duration: '2022 - 2026',
+      grade: 'CGPA: 3.75'
     }
   ],
   skills: [
-    'React', 'TypeScript', 'Vite', 'Tailwind CSS', 'GraphQL', 'Shopify Liquid', 
-    'Zustand', 'Node.js', 'PostgreSQL', 'Framer Motion', 'REST APIs', 'Git'
+    'HTML', 'CSS', 'JavaScript', 'React', 'Next.js', 'Tailwind CSS', 'DaisyUI',
+    'Node.js', 'WordPress', 'Shopify', 'Wix', 'C', 'Java', 'Python', 'PHP', 
+    'Mysql', 'MongoDB', 'Git', 'PostMan', 'Firebase'
   ],
   projects: [
     {
       id: 'proj-1',
-      name: 'HydroStore Headless Portal',
-      description: 'Built a multi-tenant headless e-commerce store utilizing Vite, Shopify Storefront APIs, and styled with Tailwind. Features automated cart state synchronizations.',
-      techStack: ['React', 'TypeScript', 'GraphQL', 'Shopify Storefront API']
+      name: 'Integrated Healthcare Support System (IHSS)',
+      description: 'Features: Secure login and registration system, Doctor-wise appointment booking, Digital prescription and test report upload, Face verification with discount feature, Admin dashboard for full system management.',
+      techStack: ['NextJs', 'Expressjs', 'Mysql']
+    },
+    {
+      id: 'proj-2',
+      name: 'Kitfix',
+      description: 'Features: Shopify store build, Liquid coding, Theme customization, Metafields usage, Each category has different filters and color changes. Each product\'s data is obtained from metafields.',
+      techStack: ['Shopify']
     }
   ]
 };
@@ -317,10 +317,10 @@ export const useResumeStore = create<ResumeState>()(
           set({
             resumeData: {
               personalInfo: {
-                fullName: 'Refayet Hossen',
+                fullName: 'Md. Refayet Hossen',
                 jobTitle: 'Senior Software Engineer | React, Node.js & Shopify Solutions',
-                email: 'refayet.hossen@example.com',
-                phone: '+880 1700-000000',
+                email: 'mdrifayethossen@gmail.com',
+                phone: '01952321390',
                 website: 'https://refayet-dev.com',
                 github: 'https://github.com/refayet-dev',
                 linkedin: 'https://linkedin.com/in/refayet-dev',
@@ -354,9 +354,9 @@ export const useResumeStore = create<ResumeState>()(
               education: [
                 {
                   id: 'edu-li-1',
-                  school: 'University of Engineering and Technology',
+                  school: 'Green University of Bangladesh',
                   degree: 'B.Sc. in Computer Science',
-                  duration: '2018 - 2022'
+                  duration: '2022 - 2026'
                 }
               ],
               skills: ['React', 'TypeScript', 'Node.js', 'PostgreSQL', 'Shopify API', 'Tailwind CSS', 'Redux', 'AWS'],
@@ -379,7 +379,7 @@ export const useResumeStore = create<ResumeState>()(
       resetResume: () => set({ resumeData: DEFAULT_RESUME }),
     }),
     {
-      name: 'refayet-portfolio-resume-store',
+      name: 'refayet-portfolio-resume-store-v3',
     }
   )
 );

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, Suspense, lazy } from 'react';
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { usePortfolioStore } from './store/usePortfolioStore';
 
@@ -8,19 +8,21 @@ import Footer from './components/layout/Footer';
 import CommandPalette from './components/layout/CommandPalette';
 import NotificationProvider from './components/layout/NotificationProvider';
 
-// Feature components
+// Feature components (critical path)
 import Hero from './features/hero/Hero';
-import About from './features/about/About';
-import Skills from './features/skills/Skills';
-import Projects from './features/projects/Projects';
-import Services from './features/services/Services';
-import Contact from './features/contact/Contact';
 
-import ResumeBuilder from './features/resume/ResumeBuilder';
-import Blog from './features/blog/Blog';
-import BlogPostView from './features/blog/BlogPostView';
-import Dashboard from './features/admin/Dashboard';
-import AiAssistant from './features/assistant/AiAssistant';
+// Lazy loaded components (non-critical path)
+const About = lazy(() => import('./features/about/About'));
+const Skills = lazy(() => import('./features/skills/Skills'));
+const Projects = lazy(() => import('./features/projects/Projects'));
+const Services = lazy(() => import('./features/services/Services'));
+const Contact = lazy(() => import('./features/contact/Contact'));
+
+const ResumeBuilder = lazy(() => import('./features/resume/ResumeBuilder'));
+const Blog = lazy(() => import('./features/blog/Blog'));
+const BlogPostView = lazy(() => import('./features/blog/BlogPostView'));
+const Dashboard = lazy(() => import('./features/admin/Dashboard'));
+const AiAssistant = lazy(() => import('./features/assistant/AiAssistant'));
 
 // Scroll to top helper on route transitions
 const ScrollToTop = () => {
@@ -75,17 +77,19 @@ const Home = () => {
     <>
       <SectionObserver />
       <Hero />
-      <About />
-      <Skills />
-      <Projects />
-      <Services />
-      <Contact />
+      <Suspense fallback={<div className="py-20 flex justify-center"><div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}>
+        <About />
+        <Skills />
+        <Projects />
+        <Services />
+        <Contact />
+      </Suspense>
     </>
   );
 };
 
 export function App() {
-  const { incrementAnalytics, unlockAchievement, addNotification } = usePortfolioStore();
+  const { incrementAnalytics, unlockAchievement, addNotification, theme } = usePortfolioStore();
 
   // Log site visit on mount
   useEffect(() => {
@@ -119,6 +123,15 @@ export function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [addNotification, unlockAchievement]);
 
+  // Sync theme with HTML on mount
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
   return (
     <Router>
       <ScrollToTop />
@@ -130,20 +143,24 @@ export function App() {
         {/* Global Floating Elements */}
         <CommandPalette />
         <NotificationProvider />
-        <AiAssistant />
+        <Suspense fallback={null}>
+          <AiAssistant />
+        </Suspense>
 
         {/* Routes Body */}
         <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/resume" element={<ResumeBuilder />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:slug" element={<BlogPostView />} />
-            <Route path="/admin" element={<Dashboard />} />
-            
-            {/* Catch-all Redirect */}
-            <Route path="*" element={<Home />} />
-          </Routes>
+          <Suspense fallback={<div className="py-32 flex justify-center"><div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/resume" element={<ResumeBuilder />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPostView />} />
+              <Route path="/admin" element={<Dashboard />} />
+              
+              {/* Catch-all Redirect */}
+              <Route path="*" element={<Home />} />
+            </Routes>
+          </Suspense>
         </main>
 
         {/* Footer */}

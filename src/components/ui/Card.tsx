@@ -43,7 +43,7 @@ export const Card = ({
     <div
       className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0"
       style={{
-        background: `radial-gradient(350px circle at ${coords.x}px ${coords.y}px, rgba(var(--color-accent-rgb), 0.08), transparent 80%)`,
+        background: `radial-gradient(400px circle at ${coords.x}px ${coords.y}px, rgba(var(--color-accent-rgb), 0.15), transparent 80%)`,
       }}
     />
   );

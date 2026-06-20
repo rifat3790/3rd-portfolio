@@ -1,8 +1,10 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Check, ChevronLeft, ChevronRight, Quote, Star, Lock, ShoppingBag, Code2, Cpu, Layers, Globe } from 'lucide-react';
 import gsap from 'gsap';
-import { PROJECTS, TESTIMONIALS, type Project } from '../../data/portfolioData';
+import { useTranslation } from '../../hooks/useTranslation';
+import { PROJECTS as projectsEn, TESTIMONIALS as testimonialsEn, type Project } from '../../data/portfolioData';
+import { PROJECTS as projectsBn, TESTIMONIALS as testimonialsBn } from '../../data/portfolioDataBn';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 
@@ -13,22 +15,42 @@ const GithubIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const filterTabs = [
-  { id: 'all', label: 'All Work', icon: Layers },
-  { id: 'shopify', label: 'Shopify Stores', icon: ShoppingBag },
-  { id: 'react', label: 'React Apps', icon: Code2 },
-  { id: 'fullstack', label: 'Full Stack', icon: Globe },
-  { id: 'ai', label: 'AI Products', icon: Cpu },
+const getFilterTabs = (t: any) => [
+  { id: 'all', label: t('projects.tab.all') || 'All Work', icon: Layers },
+  { id: 'shopify', label: t('projects.tab.shopify') || 'Shopify Stores', icon: ShoppingBag },
+  { id: 'react', label: t('projects.tab.react') || 'React Apps', icon: Code2 },
+  { id: 'fullstack', label: t('projects.tab.fullstack') || 'Full Stack', icon: Globe },
+  { id: 'ai', label: t('projects.tab.ai') || 'AI Products', icon: Cpu },
 ];
 
 /** Determine if the image value is a real path or a CSS gradient */
 const isImagePath = (image: string) => image.startsWith('/') || image.startsWith('http');
 
 export const Projects = () => {
+  const { t, language } = useTranslation();
+  const staticProjects = language === 'en' ? projectsEn : projectsBn;
+  const TESTIMONIALS = language === 'en' ? testimonialsEn : testimonialsBn;
+  const filterTabs = getFilterTabs(t);
+  
+  const [dbProjects, setDbProjects] = useState<Project[] | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [visibleCount, setVisibleCount] = useState(6);
   const [activeCaseStudy, setActiveCaseStudy] = useState<Project | null>(null);
   const [testimonialIndex, setTestimonialIndex] = useState(0);
   const gridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/projects`)
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setDbProjects(data);
+        }
+      })
+      .catch(err => console.error("Could not fetch projects from DB:", err));
+  }, []);
+
+  const PROJECTS = dbProjects || staticProjects;
 
   // GSAP 3D Card Hover Tilt handlers
   const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -68,6 +90,8 @@ export const Projects = () => {
     activeCategory === 'all' || p.category === activeCategory
   );
 
+  const visibleProjects = filteredProjects.slice(0, visibleCount);
+
   const nextTestimonial = () => {
     setTestimonialIndex((prev) => (prev + 1) % TESTIMONIALS.length);
   };
@@ -87,13 +111,13 @@ export const Projects = () => {
         {/* SECTION HEADER */}
         <div className="flex flex-col items-center text-center gap-3">
           <span className="text-xs uppercase tracking-widest font-extrabold text-accent font-display">
-            Selected Work
+            {t('projects.badge')}
           </span>
           <h2 className="text-3xl sm:text-4xl font-black font-display tracking-tight text-slate-900 dark:text-white">
-            Projects & Case Studies
+            {t('projects.title')}
           </h2>
           <p className="text-sm text-slate-500 dark:text-zinc-500 max-w-md">
-            Real-world projects delivered for clients — from Shopify storefronts to full-stack web applications.
+            {t('projects.subtitle')}
           </p>
           <div className="w-12 h-1 bg-accent rounded-full mt-1" />
         </div>
@@ -106,7 +130,10 @@ export const Projects = () => {
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveCategory(tab.id)}
+                onClick={() => {
+                  setActiveCategory(tab.id);
+                  setVisibleCount(6);
+                }}
                 className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold rounded-xl transition-all cursor-pointer border ${
                   isActive
                     ? 'btn-active-premium'
@@ -123,20 +150,18 @@ export const Projects = () => {
         {/* Project count badge */}
         <div className="flex justify-center -mt-10">
           <span className="text-[11px] text-slate-400 dark:text-zinc-600 font-mono">
-            Showing {filteredProjects.length} project{filteredProjects.length !== 1 ? 's' : ''}
+            Showing {visibleProjects.length} of {filteredProjects.length} project{filteredProjects.length !== 1 ? 's' : ''}
           </span>
         </div>
 
         {/* PROJECTS GRID */}
         <div className="w-full" ref={gridRef}>
-          <AnimatePresence mode="popLayout">
+          <AnimatePresence>
             <motion.div
-              layout
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             >
-              {filteredProjects.map((project) => (
+              {visibleProjects.map((project) => (
                 <motion.div
-                  layout
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
@@ -294,6 +319,14 @@ export const Projects = () => {
             </motion.div>
           </AnimatePresence>
         </div>
+
+        {visibleCount < filteredProjects.length && (
+          <div className="flex justify-center w-full mt-4">
+            <Button onClick={() => setVisibleCount((prev) => prev + 6)}>
+              Show More Projects
+            </Button>
+          </div>
+        )}
 
         {/* CLIENT TESTIMONIALS CAROUSEL */}
         <div className="mt-12 border-t border-slate-200/50 dark:border-zinc-800/80 pt-16 flex flex-col gap-8 max-w-4xl mx-auto w-full">

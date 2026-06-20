@@ -3,28 +3,53 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Award, ChevronDown, Trophy, Zap, Compass, Coffee } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useTranslation } from '../../hooks/useTranslation';
 import { usePortfolioStore } from '../../store/usePortfolioStore';
 import { Card } from '../../components/ui/Card';
-import { TIMELINE } from '../../data/portfolioData';
+import { TIMELINE as timelineEn } from '../../data/portfolioData';
+import { TIMELINE as timelineBn } from '../../data/portfolioDataBn';
 
 gsap.registerPlugin(ScrollTrigger);
-
-const ROADMAP = [
-  { term: 'Q3 - Q4 2026', title: 'AI-Agent Integrations', desc: 'Implementing stateful subagents in client web tools using LangChain and custom vector DB retrievals.' },
-  { term: 'Q1 - Q2 2027', title: 'Advanced WebGPU Graphics', desc: 'Refactoring 3D portfolio assets using WebGPU shaders and Three.js canvas structures.' }
-];
-
-const PERSONALITY = [
-  { title: 'Obsessively Optimized', desc: 'I cannot stand slow loading speeds or redundant code libraries. 100/100 Lighthouse is my standard.', icon: Zap },
-  { title: 'Product Focused', desc: 'I code with conversion and sales growth metrics in mind, ensuring storefront UI serves the business.', icon: Compass },
-  { title: 'Lifelong Learner', desc: 'Constantly absorbing new stacks. Coffee and technical documentation are my fuel.', icon: Coffee }
-];
 
 export const About = () => {
   const [expandedTimeline, setExpandedTimeline] = useState<string | null>(null);
   const [selectedTrait, setSelectedTrait] = useState<number | null>(null);
   
   const { achievements } = usePortfolioStore();
+  const { t, language } = useTranslation();
+  
+  const TIMELINE = language === 'en' ? timelineEn : timelineBn;
+
+  const ROADMAP = [
+    { 
+      term: 'Q3 - Q4 2026', 
+      title: language === 'en' ? 'AI-Agent Integrations' : 'এআই-এজেন্ট ইন্টিগ্রেশন', 
+      desc: language === 'en' ? 'Implementing stateful subagents in client web tools using LangChain and custom vector DB retrievals.' : 'ল্যাংচেইন এবং কাস্টম ভেক্টর ডিবি রিট্রিভাল ব্যবহার করে ক্লায়েন্ট ওয়েব টুলসে এআই সাব-এজেন্ট যুক্ত করা।' 
+    },
+    { 
+      term: 'Q1 - Q2 2027', 
+      title: language === 'en' ? 'Advanced WebGPU Graphics' : 'অ্যাডভান্সড ওয়েবজিপিইউ (WebGPU) গ্রাফিক্স', 
+      desc: language === 'en' ? 'Refactoring 3D portfolio assets using WebGPU shaders and Three.js canvas structures.' : 'ওয়েবজিপিইউ শেডার এবং থ্রি.জেএস ক্যানভাস ব্যবহার করে থ্রিডি পোর্টফোলিও অ্যাসেট রিফ্যাক্টর করা।' 
+    }
+  ];
+
+  const PERSONALITY = [
+    { 
+      title: language === 'en' ? 'Obsessively Optimized' : 'অত্যন্ত অপ্টিমাইজড', 
+      desc: language === 'en' ? 'I cannot stand slow loading speeds or redundant code libraries. 100/100 Lighthouse is my standard.' : 'স্লো লোডিং স্পিড আমার একদম পছন্দ না। ১০০/১০০ লাইটহাউস স্কোর হলো আমার স্ট্যান্ডার্ড।', 
+      icon: Zap 
+    },
+    { 
+      title: language === 'en' ? 'Product Focused' : 'প্রোডাক্ট ফোকাসড', 
+      desc: language === 'en' ? 'I code with conversion and sales growth metrics in mind, ensuring storefront UI serves the business.' : 'ব্যবসার কনভার্শন এবং সেলস বৃদ্ধির কথা মাথায় রেখে আমি স্টোরফ্রন্ট ইউআই তৈরি করি।', 
+      icon: Compass 
+    },
+    { 
+      title: language === 'en' ? 'Lifelong Learner' : 'আজীবন শিক্ষার্থী', 
+      desc: language === 'en' ? 'Constantly absorbing new stacks. Coffee and technical documentation are my fuel.' : 'নিয়মিত নতুন টেকনোলজি শিখছি। কফি এবং টেকনিক্যাল ডকুমেন্টেশন হলো আমার শক্তির উৎস।', 
+      icon: Coffee 
+    }
+  ];
 
   // GSAP ScrollTrigger timeline animations
   useEffect(() => {
@@ -66,35 +91,45 @@ export const About = () => {
         {/* SECTION HEADER */}
         <div className="flex flex-col items-center text-center gap-3">
           <span className="text-xs uppercase tracking-widest font-extrabold text-accent font-display">
-            My Story
+            {t('about.badge')}
           </span>
           <h2 className="text-3xl sm:text-4xl font-black font-display tracking-tight text-slate-900 dark:text-white">
-            Engineering Visual Experiences
+            {t('about.title')}
           </h2>
           <div className="w-12 h-1 bg-accent rounded-full mt-1" />
         </div>
 
         {/* CORE GRID */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start"
+        >
           
           {/* LEFT COLUMN: Narrative & Personality */}
           <div className="col-span-1 lg:col-span-6 flex flex-col gap-8">
             <div className="flex flex-col gap-4 text-left">
               <h3 className="text-xl font-bold font-display text-slate-900 dark:text-white">
-                Who is Refayet Hossen?
+                {t('about.title')}
               </h3>
               <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 leading-relaxed">
-                I am a passionate software engineer based in Dhaka, specializing in frontend development architectures. Over the past 5 years, I have helped merchants double their checkout conversions by migrating traditional sites into blazing-fast headless Shopify frameworks.
+                {language === 'en' 
+                  ? "I am a passionate software engineer based in Dhaka, specializing in frontend development architectures. Over the past 5 years, I have helped merchants double their checkout conversions by migrating traditional sites into blazing-fast headless Shopify frameworks."
+                  : "আমি ঢাকার একজন সফটওয়্যার ইঞ্জিনিয়ার, ফ্রন্টএন্ড ডেভেলপমেন্ট আর্কিটেকচারে স্পেশালাইজড। গত ৫ বছরে, আমি অসংখ্য মার্চেন্টকে তাদের ট্র্যাডিশনাল ই-কমার্স সাইটগুলোকে দ্রুতগতির হেডলেস শপিফাইয়ে রূপান্তর করে কনভার্শন বাড়াতে সাহায্য করেছি।"}
               </p>
               <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 leading-relaxed">
-                I enjoy writing responsive interfaces in React and TypeScript, optimizing Web Vitals, and incorporating smooth, physics-based motion transitions that direct user focus.
+                {language === 'en'
+                  ? "I enjoy writing responsive interfaces in React and TypeScript, optimizing Web Vitals, and incorporating smooth, physics-based motion transitions that direct user focus."
+                  : "আমি রিঅ্যাক্ট এবং টাইপস্ক্রিপ্ট দিয়ে রেসপন্সিভ ইন্টারফেস তৈরি করতে, ওয়েব ভাইটাল অপ্টিমাইজ করতে এবং স্মুথ মোশন ট্রানজিশন ব্যবহার করে ইউজারের এনগেজমেন্ট বাড়াতে পছন্দ করি।"}
               </p>
             </div>
 
             {/* Trait Cards */}
             <div className="flex flex-col gap-3.5">
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 font-display text-left">
-                Personality Traits
+                {t('about.brief')}
               </span>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {PERSONALITY.map((trait, idx) => {
@@ -138,12 +173,11 @@ export const About = () => {
             {/* Future Career Roadmap */}
             <div className="flex flex-col gap-3.5">
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 font-display text-left">
-                Career Roadmap (What I'm Learning Next)
+                {t('about.roadmap')}
               </span>
               <div className="flex flex-col gap-3">
                 {ROADMAP.map((item) => (
                   <div key={item.title} className="flex gap-4 p-4 rounded-xl border border-slate-200/50 dark:border-zinc-800/80 bg-slate-50/50 dark:bg-zinc-900/10">
-                    <span className="text-xs font-bold text-accent font-mono shrink-0">{item.term}</span>
                     <div className="text-left flex flex-col gap-0.5">
                       <h4 className="text-xs font-bold text-slate-800 dark:text-zinc-200">{item.title}</h4>
                       <p className="text-[11px] text-slate-500 dark:text-zinc-400 leading-relaxed">{item.desc}</p>
@@ -158,7 +192,7 @@ export const About = () => {
           {/* RIGHT COLUMN: Chronology Timeline Accordion */}
           <div className="col-span-1 lg:col-span-6 flex flex-col gap-8 text-left">
             <h3 className="text-xl font-bold font-display text-slate-900 dark:text-white">
-              Milestones & Timeline
+              {t('about.timeline')}
             </h3>
 
             <div className="relative border-l-2 border-slate-200 dark:border-zinc-800 ml-3.5 pl-6 flex flex-col gap-8">
@@ -222,7 +256,7 @@ export const About = () => {
             {/* Certifications Row */}
             <div className="flex flex-col gap-3.5">
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 font-display">
-                Featured Certifications
+                {t('about.certs')}
               </span>
               <div className="flex flex-col gap-2.5">
                 <div className="flex items-center gap-3 p-3 rounded-xl border border-slate-100 dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-950/20">
@@ -244,16 +278,16 @@ export const About = () => {
 
           </div>
 
-        </div>
+        </motion.div>
 
         {/* GAMIFIED ACHIEVEMENTS PANEL */}
         <div className="mt-8 border-t border-slate-200/50 dark:border-zinc-800/80 pt-12 flex flex-col gap-6 text-left">
-          <div className="flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-accent" />
-            <h3 className="font-bold text-lg font-display text-slate-900 dark:text-white">
-              Portfolio Badges & Achievements
-            </h3>
-          </div>
+            <div className="flex items-center gap-3">
+              <Trophy className="w-5 h-5 text-accent" />
+              <h3 className="text-xl font-bold font-display text-slate-900 dark:text-white">
+                {t('about.achievements')}
+              </h3>
+            </div>
           <p className="text-xs text-slate-500 dark:text-zinc-400 -mt-3 leading-relaxed max-w-2xl">
             Interact with the site (switch accent colors, complete the ATS CV generator checklist, chat with the AI chatbot, find the Konami Code easter egg) to unlock developer trophies!
           </p>

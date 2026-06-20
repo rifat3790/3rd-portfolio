@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Calendar, Clock, ArrowRight, BookOpen, AlertCircle } from 'lucide-react';
-import { BLOG_POSTS } from '../../data/blogData';
+import { BLOG_POSTS as blogPostsEn } from '../../data/blogData';
+import { BLOG_POSTS as blogPostsBn } from '../../data/blogDataBn';
+import { useTranslation } from '../../hooks/useTranslation';
 import { Card } from '../../components/ui/Card';
 
 export const Blog = () => {
@@ -9,9 +11,11 @@ export const Blog = () => {
   const [searchQuery, setSearchQuery] = useState('');
   
   const navigate = useNavigate();
+  const { language } = useTranslation();
+  const BLOG_POSTS = language === 'en' ? blogPostsEn : blogPostsBn;
 
   const categories = [
-    { id: 'all', label: 'All Articles' },
+    { id: 'all', label: language === 'en' ? 'All Articles' : 'সব আর্টিকেল' },
     { id: 'Shopify', label: 'Shopify' },
     { id: 'React', label: 'React' },
     { id: 'CSS', label: 'CSS & Motion' }
@@ -45,10 +49,10 @@ export const Blog = () => {
             </div>
             <div>
               <h2 className="text-2xl font-black font-display text-slate-900 dark:text-white">
-                Technical Insights & Engineering Log
+                {language === 'en' ? 'Technical Insights & Engineering Log' : 'টেকনিক্যাল ইনসাইট এবং ইঞ্জিনিয়ারিং লগ'}
               </h2>
               <p className="text-xs text-slate-500 dark:text-zinc-500 mt-1">
-                Articles covering Shopify storefront optimizations, advanced state management, and visual design guidelines.
+                {language === 'en' ? 'Articles covering Shopify storefront optimizations, advanced state management, and visual design guidelines.' : 'শপিফাই স্টোরফ্রন্ট অপ্টিমাইজেশন, অ্যাডভান্সড স্টেট ম্যানেজমেন্ট এবং ভিজ্যুয়াল ডিজাইন গাইডলাইন নিয়ে আর্টিকেল।'}
               </p>
             </div>
           </div>
@@ -76,7 +80,7 @@ export const Blog = () => {
             <Search className="w-4 h-4 text-slate-400 dark:text-zinc-500 mr-2 shrink-0" />
             <input
               type="text"
-              placeholder="Search articles..."
+              placeholder={language === 'en' ? "Search articles..." : "আর্টিকেল খুঁজুন..."}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-transparent text-xs focus:outline-none text-slate-800 dark:text-zinc-200"
@@ -102,7 +106,7 @@ export const Blog = () => {
                 >
                   <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:12px_12px]" />
                   <div className="relative text-white font-display font-black text-xl tracking-tight text-center drop-shadow-md">
-                    FEATURED PUBLICATION
+                    {language === 'en' ? 'FEATURED PUBLICATION' : 'ফিচারড পাবলিকেশন'}
                   </div>
                 </div>
 
@@ -141,7 +145,9 @@ export const Blog = () => {
         {/* ARTICLES GRID */}
         <div className="w-full flex flex-col gap-6">
           <h3 className="font-bold font-display text-lg text-slate-900 dark:text-white border-b pb-2 text-left">
-            {activeCategory === 'all' && !searchQuery ? 'Recent Publications' : 'Search Results'}
+            {activeCategory === 'all' && !searchQuery 
+              ? (language === 'en' ? 'Recent Publications' : 'সাম্প্রতিক প্রকাশনা') 
+              : (language === 'en' ? 'Search Results' : 'অনুসন্ধানের ফলাফল')}
           </h3>
 
           {filteredPosts.length > 0 ? (

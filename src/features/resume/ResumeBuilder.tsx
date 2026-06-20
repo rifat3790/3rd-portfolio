@@ -9,6 +9,7 @@ import { usePortfolioStore } from '../../store/usePortfolioStore';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useTranslation } from '../../hooks/useTranslation';
 // Helper functions for client-side LinkedIn PDF Parsing
 const loadPdfJS = (): Promise<any> => {
   return new Promise((resolve, reject) => {
@@ -251,9 +252,9 @@ const parseResumeText = (text: string) => {
   if (education.length === 0) {
     education.push({
       id: 'edu-parsed-0',
-      school: 'University of Engineering and Technology',
+      school: 'Green University of Bangladesh',
       degree: 'B.Sc. in Computer Science',
-      duration: '2018 - 2022'
+      duration: '2022 - 2026'
     });
   }
 
@@ -274,6 +275,7 @@ const parseResumeText = (text: string) => {
 };
 
 export const ResumeBuilder = () => {
+  const { language } = useTranslation();
   const [activeTab, setActiveTab] = useState<'personal' | 'experience' | 'education' | 'skills' | 'ats'>('personal');
   const [isExporting, setIsExporting] = useState(false);
   
@@ -282,7 +284,7 @@ export const ResumeBuilder = () => {
   const [linkedinUrl, setLinkedinUrl] = useState('https://www.linkedin.com/in/refayet-hossen');
   const [importStep, setImportStep] = useState<'idle' | 'login' | 'oauth' | 'fetching' | 'mapping' | 'success'>('idle');
   const [importProgress, setImportProgress] = useState(0);
-  const [linkedinEmail, setLinkedinEmail] = useState('refayet.hossen@example.com');
+  const [linkedinEmail, setLinkedinEmail] = useState('mdrifayethossen@gmail.com');
   const [linkedinPassword, setLinkedinPassword] = useState('••••••••••••');
 
   // Parsing status states
@@ -391,7 +393,7 @@ export const ResumeBuilder = () => {
 
   const handleAddEdu = () => {
     addEducation({
-      school: 'New University',
+      school: 'Green University of Bangladesh',
       degree: 'Degree / Major',
       duration: '2022 - 2026'
     });
@@ -406,12 +408,15 @@ export const ResumeBuilder = () => {
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-16 bg-slate-50 dark:bg-darkbg/40 text-slate-800 dark:text-zinc-200">
+    <div className="min-h-screen pt-24 pb-16 bg-slate-50 dark:bg-darkbg text-slate-800 dark:text-zinc-200 relative overflow-hidden">
       
-      {/* Background spot overlays */}
-      <div className="absolute top-10 left-1/3 w-96 h-96 bg-accent/5 rounded-full blur-[100px] pointer-events-none no-print" />
+      {/* Dynamic Background */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none no-print z-0">
+        <div className="absolute -top-[10%] -right-[10%] w-[50%] h-[50%] bg-accent/5 rounded-full blur-[120px] animate-pulse-slow" />
+        <div className="absolute bottom-[20%] -left-[10%] w-[40%] h-[40%] bg-blue-500/5 rounded-full blur-[100px] animate-pulse-slow" style={{ animationDelay: '2s' }} />
+      </div>
 
-      <div className="max-w-7xl mx-auto px-6 flex flex-col gap-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 flex flex-col gap-8">
         
         {/* PAGE HEADER */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-slate-200 dark:border-zinc-800 pb-6 no-print text-left">
@@ -420,9 +425,9 @@ export const ResumeBuilder = () => {
               <FileText className="w-6 h-6" />
             </div>
             <div>
-              <h2 className="text-2xl font-black font-display text-slate-900 dark:text-white">
-                ATS Resume & CV Builder
-              </h2>
+              <h1 className="text-3xl md:text-5xl font-black font-display tracking-tight text-slate-900 dark:text-white mt-1">
+                {language === 'en' ? 'ATS Resume & CV Builder' : 'এটিএস (ATS) সিভি বিল্ডার'}
+              </h1>
               <p className="text-xs text-slate-500 dark:text-zinc-500 mt-1">
                 Customize, test against ATS keyword scanning algorithms, and print high-fidelity PDF documents.
               </p>
@@ -501,11 +506,19 @@ export const ResumeBuilder = () => {
             </div>
 
             {/* TAB CONTENT EDITORS */}
-            <div className="bg-white dark:bg-darkcard border border-slate-200 dark:border-zinc-800 p-5 rounded-2xl shadow-sm min-h-[350px] flex flex-col gap-4">
+            <div className="bg-white/80 dark:bg-darkcard/80 backdrop-blur-xl border border-slate-200/50 dark:border-zinc-800/50 p-6 rounded-2xl shadow-xl shadow-slate-200/20 dark:shadow-black/40 min-h-[400px] flex flex-col gap-4 relative overflow-hidden">
               
+              <AnimatePresence mode="wait">
               {/* 1. PERSONAL INFO TAB */}
               {activeTab === 'personal' && (
-                <div className="flex flex-col gap-4">
+                <motion.div 
+                  key="personal"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex flex-col gap-4"
+                >
                   <h3 className="font-bold font-display text-sm text-slate-900 dark:text-white">Contact & Profile Summary</h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex flex-col gap-1.5">
@@ -579,12 +592,19 @@ export const ResumeBuilder = () => {
                       className="px-3 py-2 text-xs rounded-xl bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 focus:outline-none focus:border-accent text-slate-850 dark:text-zinc-200 resize-none leading-relaxed"
                     />
                   </div>
-                </div>
+                </motion.div>
               )}
 
               {/* 2. EXPERIENCE TAB */}
               {activeTab === 'experience' && (
-                <div className="flex flex-col gap-4">
+                <motion.div 
+                  key="experience"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex flex-col gap-4"
+                >
                   <div className="flex justify-between items-center">
                     <h3 className="font-bold font-display text-sm text-slate-900 dark:text-white">Work History</h3>
                     <button onClick={handleAddExp} className="text-xs font-bold text-accent flex items-center gap-1 cursor-pointer">
@@ -636,12 +656,19 @@ export const ResumeBuilder = () => {
                       </div>
                     ))}
                   </div>
-                </div>
+                </motion.div>
               )}
 
               {/* 3. EDUCATION TAB */}
               {activeTab === 'education' && (
-                <div className="flex flex-col gap-4">
+                <motion.div 
+                  key="education"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex flex-col gap-4"
+                >
                   <div className="flex justify-between items-center">
                     <h3 className="font-bold font-display text-sm text-slate-900 dark:text-white">Education History</h3>
                     <button onClick={handleAddEdu} className="text-xs font-bold text-accent flex items-center gap-1 cursor-pointer">
@@ -682,12 +709,19 @@ export const ResumeBuilder = () => {
                       </div>
                     ))}
                   </div>
-                </div>
+                </motion.div>
               )}
 
               {/* 4. SKILLS & PROJECTS TAB */}
               {activeTab === 'skills' && (
-                <div className="flex flex-col gap-4 text-left">
+                <motion.div 
+                  key="skills"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex flex-col gap-4 text-left"
+                >
                   {/* Skills Editor */}
                   <div className="flex flex-col gap-2">
                     <h3 className="font-bold font-display text-sm text-slate-900 dark:text-white">Technical Skills</h3>
@@ -758,12 +792,19 @@ export const ResumeBuilder = () => {
                       ))}
                     </div>
                   </div>
-                </div>
+                </motion.div>
               )}
 
               {/* 5. ATS SCORER AUDIT TAB */}
               {activeTab === 'ats' && (
-                <div className="flex flex-col gap-4 text-left">
+                <motion.div 
+                  key="ats"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex flex-col gap-4 text-left"
+                >
                   <div className="flex items-center gap-4.5 bg-slate-50 dark:bg-zinc-950/30 p-4 rounded-2xl border border-slate-100 dark:border-zinc-850">
                     
                     {/* Dial graph */}
@@ -811,8 +852,9 @@ export const ResumeBuilder = () => {
                       </div>
                     ))}
                   </div>
-                </div>
+                </motion.div>
               )}
+              </AnimatePresence>
 
             </div>
 
@@ -827,9 +869,14 @@ export const ResumeBuilder = () => {
           </div>
 
           {/* RIGHT COLUMN: Live Paper Preview sheet */}
-          <div className="col-span-1 lg:col-span-7 w-full min-w-0 overflow-x-auto pb-4 scrollbar-thin">
-            <div className="min-w-[800px] max-w-[800px] mx-auto">
-              <Card className="!p-0 w-full border border-slate-200 dark:border-zinc-800 bg-white dark:bg-darkcard overflow-hidden shadow-2xl relative">
+          <div className="col-span-1 lg:col-span-7 w-full min-w-0 overflow-x-auto pb-4 scrollbar-thin flex justify-center perspective-[1200px]">
+            <motion.div 
+              initial={{ rotateX: 5, y: 20, opacity: 0 }}
+              animate={{ rotateX: 0, y: 0, opacity: 1 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="min-w-[800px] max-w-[800px] mx-auto group"
+            >
+              <Card className="!p-0 w-full border border-slate-200 dark:border-zinc-800 bg-white dark:bg-darkcard overflow-hidden shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] relative transition-all duration-500 group-hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.15)] dark:group-hover:shadow-[0_30px_60px_-15px_rgba(14,165,233,0.1)]">
               
               {/* Paper overlay controls for web (hides on print) */}
               <div className="flex justify-between items-center bg-slate-100 dark:bg-zinc-900 border-b border-slate-250 dark:border-zinc-800 px-4 py-2.5 no-print">
@@ -1129,7 +1176,7 @@ export const ResumeBuilder = () => {
               </div>
 
               </Card>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>

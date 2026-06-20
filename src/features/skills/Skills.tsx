@@ -1,22 +1,40 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Sparkles, AlertCircle, Bookmark, CheckCircle2 } from 'lucide-react';
-import { SKILLS } from '../../data/portfolioData';
+import { SKILLS as skillsEn } from '../../data/portfolioData';
+import { SKILLS as skillsBn } from '../../data/portfolioDataBn';
+import { useTranslation } from '../../hooks/useTranslation';
 import { Card } from '../../components/ui/Card';
 
 export const Skills = () => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
+  const [dbSkills, setDbSkills] = useState<any[] | null>(null);
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/skills`)
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setDbSkills(data);
+        }
+      })
+      .catch(err => console.error("Could not fetch skills from DB:", err));
+  }, []);
+
+  const { t, language } = useTranslation();
+  const staticSkills = language === 'en' ? skillsEn : skillsBn;
+  const SKILLS = dbSkills || staticSkills;
 
   const categories = [
-    { id: 'all', label: 'All Tech' },
-    { id: 'frontend', label: 'Frontend' },
-    { id: 'backend', label: 'Backend' },
-    { id: 'shopify', label: 'Shopify' },
-    { id: 'database', label: 'Database' },
-    { id: 'ai', label: 'AI & Prompts' },
-    { id: 'design', label: 'UI/UX Design' }
+    { id: 'all', label: t('skills.tab.all') },
+    { id: 'frontend', label: t('skills.tab.frontend') },
+    { id: 'backend', label: t('skills.tab.backend') },
+    { id: 'shopify', label: t('skills.tab.shopify') },
+    { id: 'database', label: t('skills.tab.database') },
+    { id: 'ai', label: t('skills.tab.ai') },
+    { id: 'design', label: t('skills.tab.design') }
   ];
 
   // Filtering criteria
@@ -42,10 +60,10 @@ export const Skills = () => {
         {/* SECTION HEADER */}
         <div className="flex flex-col items-center text-center gap-3">
           <span className="text-xs uppercase tracking-widest font-extrabold text-accent font-display">
-            Expertise Matrix
+            {t('skills.badge')}
           </span>
           <h2 className="text-3xl sm:text-4xl font-black font-display tracking-tight text-slate-900 dark:text-white">
-            Professional Skillset
+            {t('skills.title')}
           </h2>
           <div className="w-12 h-1 bg-accent rounded-full mt-1" />
         </div>
@@ -192,7 +210,7 @@ export const Skills = () => {
                                   <span>Used in Projects</span>
                                 </span>
                                 <div className="flex flex-wrap gap-1 mt-0.5">
-                                  {skill.projectsUsing.map((p) => (
+                                  {skill.projectsUsing.map((p: string) => (
                                     <span key={p} className="text-[9px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-zinc-800/80 text-slate-700 dark:text-zinc-300">
                                       {p}
                                     </span>
@@ -209,7 +227,7 @@ export const Skills = () => {
                                   <span>Certifications</span>
                                 </span>
                                 <ul className="flex flex-col gap-0.5 mt-0.5">
-                                  {skill.certifications.map((c) => (
+                                  {skill.certifications.map((c: string) => (
                                     <li key={c} className="text-[9.5px] text-slate-600 dark:text-zinc-400 font-medium">
                                       • {c}
                                     </li>

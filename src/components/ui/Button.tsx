@@ -26,7 +26,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     
     // Variant styles
     const variants = {
-      primary: 'bg-accent hover:bg-accent-hover text-white shadow-lg shadow-accent/20 hover:shadow-accent/40 border border-accent/10 relative overflow-hidden group',
+      primary: 'bg-accent hover:bg-accent-hover text-white shadow-lg shadow-accent/30 hover:shadow-accent/60 hover:shadow-[0_0_20px_rgba(var(--color-accent-rgb),0.4)] border border-accent/10 relative overflow-hidden group',
       secondary: 'bg-slate-200 hover:bg-slate-350 dark:bg-darkborder dark:hover:bg-zinc-800 text-slate-800 dark:text-zinc-200 border border-slate-300 dark:border-zinc-700/50',
       glass: 'glass-panel hover:bg-slate-100/50 dark:hover:bg-white/10 text-slate-800 dark:text-slate-200 border border-slate-350/30 dark:border-white/10 shadow-sm',
       outline: 'bg-transparent hover:bg-accent/5 text-slate-700 dark:text-zinc-300 border border-slate-300 dark:border-zinc-700 hover:border-accent dark:hover:border-accent',

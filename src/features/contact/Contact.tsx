@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Mail, MapPin, Send, MessageSquare, Check } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { usePortfolioStore } from '../../store/usePortfolioStore';
+import { useTranslation } from '../../hooks/useTranslation';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 
@@ -24,6 +25,14 @@ export const Contact = () => {
   const [submitted, setSubmitted] = useState(false);
 
   const { addInquiry, addNotification } = usePortfolioStore();
+  const { t, language } = useTranslation();
+
+  const currentServiceOptions = language === 'en' ? SERVICE_OPTIONS : [
+    'হেডলেস শপিফাই কমার্স',
+    'সাস (SaaS) ওয়েব অ্যাপ ডেভেলপমেন্ট',
+    'লাইটহাউস পেজ অপ্টিমাইজেশন',
+    'অন্যান্য / কাস্টম কনসাল্টিং'
+  ];
 
   // Autofill service from external events (e.g. Services section clicking)
   useEffect(() => {
@@ -53,7 +62,25 @@ export const Contact = () => {
 
     setIsSubmitting(true);
 
-    setTimeout(() => {
+    fetch('https://formsubmit.co/ajax/mdrifayethossen@gmail.com', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json'
+      },
+      body: new URLSearchParams({
+        name,
+        email,
+        company: company || 'N/A',
+        service,
+        budget,
+        message,
+        _subject: `New Portfolio Inquiry from ${name}`,
+        _autoresponse: "Thank you for reaching out! I have received your message and will get back to you within 12 hours. Best regards, Md. Refayet Hossen"
+      })
+    })
+    .then(response => response.json())
+    .then(() => {
       // Record inquiry in Zustand
       addInquiry({
         name,
@@ -80,7 +107,11 @@ export const Contact = () => {
       setEmail('');
       setCompany('');
       setMessage('');
-    }, 1200);
+    })
+    .catch(() => {
+      setIsSubmitting(false);
+      addNotification('Failed to send message. Please try again or use direct email.', 'error', 'Transmission Failed');
+    });
   };
 
   const prefilledWhatsappText = encodeURIComponent(
@@ -98,12 +129,15 @@ export const Contact = () => {
         {/* SECTION HEADER */}
         <div className="flex flex-col items-center text-center gap-3">
           <span className="text-xs uppercase tracking-widest font-extrabold text-accent font-display">
-            Contact Me
+            {t('contact.badge')}
           </span>
           <h2 className="text-3xl sm:text-4xl font-black font-display tracking-tight text-slate-900 dark:text-white">
-            Let's Collaborate On Your Project
+            {t('contact.title')}
           </h2>
-          <div className="w-12 h-1 bg-accent rounded-full mt-1" />
+          <p className="text-sm text-slate-500 dark:text-zinc-500 max-w-2xl leading-relaxed">
+            {t('contact.desc')}
+          </p>
+          <div className="w-12 h-1 bg-accent rounded-full mt-2" />
         </div>
 
         {/* CONTENT ROW */}
@@ -127,7 +161,7 @@ export const Contact = () => {
                 </div>
                 <div>
                   <span className="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider font-display">Email Address</span>
-                  <p className="text-xs font-semibold text-slate-800 dark:text-zinc-200 mt-0.5">refayet.hossen@example.com</p>
+                  <p className="text-xs font-semibold text-slate-800 dark:text-zinc-200 mt-0.5">mdrifayethossen@gmail.com</p>
                 </div>
               </div>
 
@@ -149,7 +183,7 @@ export const Contact = () => {
               </span>
               <div className="flex gap-3">
                 <a 
-                  href={`https://wa.me/8801700000000?text=${prefilledWhatsappText}`}
+                  href={`https://wa.me/8801952321390?text=${prefilledWhatsappText}`}
                   target="_blank" 
                   rel="noreferrer"
                   className="flex-1 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/10 transition-all cursor-pointer"
@@ -191,106 +225,97 @@ export const Contact = () => {
                   </Button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="flex flex-col gap-5 text-left">
+                <form onSubmit={handleSubmit} className="flex flex-col gap-8 text-left">
                   
                   {/* Name and Email */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 font-display">
-                        Your Name *
-                      </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                    <div className="relative">
                       <input
                         required
                         type="text"
                         placeholder="John Doe"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800/80 focus:outline-none focus:border-accent text-xs text-slate-800 dark:text-zinc-200 placeholder:text-slate-400"
+                        className="w-full bg-transparent border-2 border-slate-200 dark:border-zinc-800 rounded-xl px-4 py-3.5 text-sm text-slate-800 dark:text-zinc-200 focus:outline-none focus:border-accent dark:focus:border-accent transition-colors placeholder:text-slate-400"
                       />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 font-display">
-                        Your Email *
+                      <label className="absolute left-3 -top-2.5 bg-white dark:bg-zinc-950 px-1 text-[11px] font-bold text-slate-500 dark:text-zinc-400">
+                        {language === 'en' ? 'Your Name' : 'আপনার নাম'} <span className="text-red-500">*</span>
                       </label>
+                    </div>
+                    <div className="relative">
                       <input
                         required
                         type="email"
                         placeholder="john@example.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800/80 focus:outline-none focus:border-accent text-xs text-slate-800 dark:text-zinc-200 placeholder:text-slate-400"
+                        className="w-full bg-transparent border-2 border-slate-200 dark:border-zinc-800 rounded-xl px-4 py-3.5 text-sm text-slate-800 dark:text-zinc-200 focus:outline-none focus:border-accent dark:focus:border-accent transition-colors placeholder:text-slate-400"
                       />
+                      <label className="absolute left-3 -top-2.5 bg-white dark:bg-zinc-950 px-1 text-[11px] font-bold text-slate-500 dark:text-zinc-400">
+                        {language === 'en' ? 'Your Email' : 'আপনার ইমেইল'} <span className="text-red-500">*</span>
+                      </label>
                     </div>
                   </div>
 
                   {/* Company and Services */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 font-display">
-                        Company Name
-                      </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                    <div className="relative">
                       <input
                         type="text"
                         placeholder="Acme Corp"
                         value={company}
                         onChange={(e) => setCompany(e.target.value)}
-                        className="px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800/80 focus:outline-none focus:border-accent text-xs text-slate-800 dark:text-zinc-200 placeholder:text-slate-400"
+                        className="w-full bg-transparent border-2 border-slate-200 dark:border-zinc-800 rounded-xl px-4 py-3.5 text-sm text-slate-800 dark:text-zinc-200 focus:outline-none focus:border-accent dark:focus:border-accent transition-colors placeholder:text-slate-400"
                       />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 font-display">
-                        Select Service
+                      <label className="absolute left-3 -top-2.5 bg-white dark:bg-zinc-950 px-1 text-[11px] font-bold text-slate-500 dark:text-zinc-400">
+                        {language === 'en' ? 'Company Name' : 'কোম্পানির নাম'}
                       </label>
+                    </div>
+                    <div className="relative">
                       <select
                         value={service}
                         onChange={(e) => setService(e.target.value)}
-                        className="px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800/80 focus:outline-none focus:border-accent text-xs text-slate-855 dark:text-zinc-200"
+                        className="w-full bg-transparent border-2 border-slate-200 dark:border-zinc-800 rounded-xl px-4 py-3.5 text-sm text-slate-800 dark:text-zinc-200 focus:outline-none focus:border-accent dark:focus:border-accent transition-colors appearance-none"
                       >
-                        {SERVICE_OPTIONS.map((o) => (
-                          <option key={o} value={o}>
-                            {o}
-                          </option>
+                        {currentServiceOptions.map((o) => (
+                          <option key={o} value={o} className="bg-white dark:bg-zinc-900">{o}</option>
                         ))}
                       </select>
+                      <label className="absolute left-3 -top-2.5 bg-white dark:bg-zinc-950 px-1 text-[11px] font-bold text-slate-500 dark:text-zinc-400">
+                        {language === 'en' ? 'Service Required' : 'প্রয়োজনীয় সার্ভিস'} <span className="text-red-500">*</span>
+                      </label>
                     </div>
                   </div>
 
                   {/* Budget Choice selector pills */}
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 font-display">
-                      Estimated Project Budget
-                    </label>
-                    <div className="flex gap-2 flex-wrap mt-0.5">
+                  <div className="relative">
+                    <select
+                      value={budget}
+                      onChange={(e) => setBudget(e.target.value)}
+                      className="w-full bg-transparent border-2 border-slate-200 dark:border-zinc-800 rounded-xl px-4 py-3.5 text-sm text-slate-800 dark:text-zinc-200 focus:outline-none focus:border-accent dark:focus:border-accent transition-colors appearance-none"
+                    >
                       {BUDGET_OPTIONS.map((opt) => (
-                        <button
-                          key={opt}
-                          type="button"
-                          onClick={() => setBudget(opt)}
-                          className={`py-2 px-4.5 rounded-xl border text-xs font-semibold cursor-pointer transition-all ${
-                            budget === opt
-                              ? 'bg-accent border-accent text-white shadow-md shadow-accent/15'
-                              : 'border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 hover:bg-slate-100 dark:hover:bg-zinc-850 hover:border-slate-300 text-slate-700 dark:text-zinc-350'
-                          }`}
-                        >
-                          {opt}
-                        </button>
+                        <option key={opt} value={opt} className="bg-white dark:bg-zinc-900 text-slate-800 dark:text-zinc-200">{opt}</option>
                       ))}
-                    </div>
+                    </select>
+                    <label className="absolute left-3 -top-2.5 bg-white dark:bg-zinc-950 px-1 text-[11px] font-bold text-slate-500 dark:text-zinc-400">
+                      {language === 'en' ? 'Project Budget' : 'প্রোজেক্ট বাজেট'} <span className="text-red-500">*</span>
+                    </label>
                   </div>
 
                   {/* Message details */}
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 font-display">
-                      Project Description *
-                    </label>
+                  <div className="relative">
                     <textarea
                       required
-                      rows={4}
-                      placeholder="Outline your requirements, timelines, or questions..."
+                      rows={5}
+                      placeholder={language === 'en' ? "Describe your project requirements, goals, and any specific technical constraints..." : "আপনার প্রোজেক্টের রিকোয়ারমেন্ট, লক্ষ্য এবং স্পেসিফিক টেকনিক্যাল বিষয়গুলো বিস্তারিত লিখুন..."}
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
-                      className="px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800/80 focus:outline-none focus:border-accent text-xs text-slate-800 dark:text-zinc-200 placeholder:text-slate-400 resize-none"
+                      className="w-full bg-transparent border-2 border-slate-200 dark:border-zinc-800 rounded-xl px-4 py-3.5 text-sm text-slate-800 dark:text-zinc-200 focus:outline-none focus:border-accent dark:focus:border-accent transition-colors resize-none placeholder:text-slate-400 dark:placeholder:text-zinc-600"
                     />
+                    <label className="absolute left-3 -top-2.5 bg-white dark:bg-zinc-950 px-1 text-[11px] font-bold text-slate-500 dark:text-zinc-400">
+                      {language === 'en' ? 'Project Details' : 'প্রোজেক্টের বিস্তারিত'} <span className="text-red-500">*</span>
+                    </label>
                   </div>
 
                   <Button

@@ -32,6 +32,7 @@ export interface Achievement {
 }
 
 interface PortfolioState {
+  language: 'en' | 'bn';
   theme: 'dark' | 'light';
   accentColor: AccentColor;
   notifications: Notification[];
@@ -46,6 +47,7 @@ interface PortfolioState {
   achievements: Achievement[];
   
   // Actions
+  setLanguage: (lang: 'en' | 'bn') => void;
   toggleTheme: () => void;
   setAccentColor: (color: AccentColor) => void;
   addNotification: (message: string, type?: Notification['type'], title?: string) => void;
@@ -70,6 +72,7 @@ const ACCENT_MAP: Record<AccentColor, { primary: string; hover: string }> = {
 export const usePortfolioStore = create<PortfolioState>()(
   persist(
     (set, get) => ({
+      language: 'en',
       theme: 'dark',
       accentColor: 'violet',
       notifications: [],
@@ -111,6 +114,8 @@ export const usePortfolioStore = create<PortfolioState>()(
         { id: 'easter_egg', title: 'Retro Gamer', description: 'Activated the Konami Code secret easter egg.', unlocked: false, icon: '🎮' },
         { id: 'accent_change', title: 'Stylist', description: 'Customized the portfolio accent color theme.', unlocked: false, icon: '🎨' },
       ],
+
+      setLanguage: (lang) => set({ language: lang }),
 
       toggleTheme: () => set((state) => {
         const nextTheme = state.theme === 'dark' ? 'light' : 'dark';
@@ -170,12 +175,22 @@ export const usePortfolioStore = create<PortfolioState>()(
 
       setAdminAuthenticated: (auth) => set({ isAdminAuthenticated: auth }),
 
-      incrementAnalytics: (key) => set((state) => ({
-        analytics: {
-          ...state.analytics,
-          [key]: state.analytics[key] + 1,
-        },
-      })),
+      incrementAnalytics: (key) => {
+        // Optimistic UI update
+        set((state) => ({
+          analytics: {
+            ...state.analytics,
+            [key]: state.analytics[key] + 1,
+          },
+        }));
+        
+        // Backend update
+        fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/analytics/increment`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ field: key }),
+        }).catch(err => console.error('Failed to increment analytics:', err));
+      },
 
       unlockAchievement: (id) => set((state) => {
         let unlockedAny = false;

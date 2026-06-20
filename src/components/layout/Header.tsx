@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Sun, Moon, Menu, X, Palette } from 'lucide-react';
 import { usePortfolioStore, type AccentColor } from '../../store/usePortfolioStore';
+import { useTranslation } from '../../hooks/useTranslation';
 import { Button } from '../ui/Button';
 
 export const Header = () => {
@@ -12,7 +13,8 @@ export const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  const { theme, toggleTheme, accentColor, setAccentColor } = usePortfolioStore();
+  const { theme, toggleTheme, accentColor, setAccentColor, language, setLanguage } = usePortfolioStore();
+  const { t } = useTranslation();
 
   // Scroll effect on header bar
   useEffect(() => {
@@ -48,10 +50,10 @@ export const Header = () => {
   }, [theme, accentColor]);
 
   const navLinks = [
-    { label: 'Home', path: '/' },
-    { label: 'Resume Builder', path: '/resume' },
-    { label: 'Blog', path: '/blog' },
-    { label: 'Dashboard', path: '/admin' },
+    { label: t('nav.home'), path: '/' },
+    { label: t('nav.resume'), path: '/resume' },
+    { label: t('nav.blog'), path: '/blog' },
+    { label: t('nav.dashboard'), path: '/admin' },
   ];
 
   const handleNavClick = (path: string) => {
@@ -77,7 +79,7 @@ export const Header = () => {
     <header 
       className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 no-print ${
         isScrolled 
-          ? 'py-4 bg-lightbg/85 dark:bg-darkbg/85 backdrop-blur-md border-b border-slate-200/50 dark:border-white/5 shadow-md' 
+          ? 'py-3 bg-lightbg/85 dark:bg-darkbg/85 backdrop-blur-xl border-b border-slate-200/50 dark:border-white/5 shadow-lg' 
           : 'py-6 bg-transparent'
       }`}
     >
@@ -167,10 +169,14 @@ export const Header = () => {
             {theme === 'dark' ? <Sun className="w-4.5 h-4.5" /> : <Moon className="w-4.5 h-4.5" />}
           </button>
 
-          {/* Quick search indicator */}
-          <kbd className="hidden lg:inline-flex items-center gap-1.5 px-2 py-1 text-[10px] font-mono text-slate-400 dark:text-zinc-500 bg-slate-100 dark:bg-zinc-800 border border-slate-200/60 dark:border-zinc-700/50 rounded-lg">
-            <span>⌘</span><span>K</span>
-          </kbd>
+          {/* Language Switcher Toggle */}
+          <button
+            onClick={() => setLanguage(language === 'en' ? 'bn' : 'en')}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-zinc-400 bg-slate-100 dark:bg-zinc-800 border border-slate-200/60 dark:border-zinc-700/50 rounded-lg hover:text-accent dark:hover:text-accent transition-colors"
+            title="Toggle Language"
+          >
+            {language === 'en' ? 'EN / বাং' : 'বাং / EN'}
+          </button>
 
           <Button 
             variant="primary" 
@@ -181,20 +187,12 @@ export const Header = () => {
               if (contactEl) contactEl.scrollIntoView({ behavior: 'smooth' });
             }}
           >
-            Hire Me
+            {t('nav.hire')}
           </Button>
         </div>
 
         {/* MOBILE MENU TOGGLE */}
         <div className="flex md:hidden items-center gap-3">
-          {/* Custom Accent Picker (Shortcut for mobile) */}
-          <button
-            onClick={() => setAccentColor(accentColor === 'violet' ? 'emerald' : accentColor === 'emerald' ? 'amber' : accentColor === 'amber' ? 'rose' : accentColor === 'rose' ? 'cyan' : 'violet')}
-            className="p-2 rounded-xl text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800"
-          >
-            <Palette className="w-5 h-5 text-accent" />
-          </button>
-
           <button
             onClick={toggleTheme}
             className="p-2 rounded-xl text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800"
@@ -229,6 +227,12 @@ export const Header = () => {
                 {link.label}
               </button>
             ))}
+            <button
+              onClick={() => setLanguage(language === 'en' ? 'bn' : 'en')}
+              className="text-left text-base font-semibold py-2 text-slate-700 dark:text-zinc-400"
+            >
+              {language === 'en' ? 'বাংলা (Bengali)' : 'English'}
+            </button>
           </div>
           <Button 
             variant="primary" 

@@ -98,7 +98,7 @@ const getBotResponse = (input: string): { text: string; suggestions?: string[]; 
   // 4. Experience / background path
   if (query.includes('experience') || query.includes('background') || query.includes('education') || query.includes('history')) {
     return {
-      text: 'Refayet Hossen is a Senior Full Stack & Shopify Developer with over 5 years of commercial experience. He has worked with companies like **AppVenture Solutions** and **Shopify Craft Studios**, leading development groups and shipping clean interfaces.',
+      text: 'Md. Refayet Hossen is a Senior Full Stack & Shopify Developer with over 5 years of commercial experience. He has worked with companies like **AppVenture Solutions** and **Shopify Craft Studios**, leading development groups and shipping clean interfaces.',
       suggestions: ['📄 Read About Me', '🚀 Show Projects', '⬅ Main Menu']
     };
   }

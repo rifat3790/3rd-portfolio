@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ShieldAlert, LogIn, LogOut, Users, Download, FileText, 
   MessageSquare, Trash2, Mail, CheckCircle, ToggleLeft, ToggleRight, BarChart3 
@@ -7,10 +7,27 @@ import { usePortfolioStore } from '../../store/usePortfolioStore';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 
+import { AdminProjects } from './AdminProjects';
+import { AdminSkills } from './AdminSkills';
+
 export const Dashboard = () => {
   const [password, setPassword] = useState('');
-  const [activeSubTab, setActiveSubTab] = useState<'inbox' | 'analytics' | 'settings'>('inbox');
+  const [activeSubTab, setActiveSubTab] = useState<'inbox' | 'analytics' | 'settings' | 'projects' | 'skills'>('inbox');
   const [isAvailableForProjects, setIsAvailableForProjects] = useState(true);
+
+  const [analytics, setAnalytics] = useState({
+    visits: 0,
+    downloads: 0,
+    resumesGenerated: 0,
+    chatsConducted: 0
+  });
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/analytics`)
+      .then(res => res.json())
+      .then(data => setAnalytics(data))
+      .catch(err => console.error(err));
+  }, []);
 
   const { 
     isAdminAuthenticated, 
@@ -18,7 +35,6 @@ export const Dashboard = () => {
     inquiries, 
     markInquiryRead, 
     deleteInquiry,
-    analytics,
     addNotification 
   } = usePortfolioStore();
 
@@ -99,20 +115,13 @@ export const Dashboard = () => {
     <div className="min-h-screen pt-24 pb-16 bg-slate-50 dark:bg-darkbg/40 text-slate-800 dark:text-zinc-200 text-left">
       <div className="max-w-7xl mx-auto px-6 flex flex-col gap-8">
         
-        {/* HEADER BAR */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 dark:border-zinc-800 pb-6 text-left">
+        {/* HEADER */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
           <div>
-            <h2 className="text-2xl font-black font-display text-slate-900 dark:text-white flex items-center gap-2">
-              <span>Admin Console</span>
-              <span className="text-xs bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded-full border border-emerald-500/20 font-semibold font-sans">Live Connection</span>
-            </h2>
-            <p className="text-xs text-slate-500 dark:text-zinc-500 mt-1">
-              Read customer inquiry messages, monitor page interactions, and customize developer availability.
-            </p>
+            <h1 className="text-3xl md:text-4xl font-black font-display text-slate-900 dark:text-white mb-2">Command Center</h1>
+            <p className="text-sm text-slate-500 dark:text-zinc-400">Manage inquiries, settings, and monitor portfolio performance.</p>
           </div>
-          <Button variant="secondary" size="sm" icon={LogOut} onClick={handleLogout}>
-            Close Console
-          </Button>
+          <Button onClick={handleLogout} variant="outline" size="sm" icon={LogOut}>Secure Logout</Button>
         </div>
 
         {/* ANALYTICS HIGHLIGHT METRICS ROW */}
@@ -142,6 +151,8 @@ export const Dashboard = () => {
         <div className="flex border-b border-slate-200 dark:border-zinc-800 gap-2 py-1 mt-4 overflow-x-auto scrollbar-none shrink-0">
           {[
             { id: 'inbox', label: `Inbox Inquiries (${inquiries.filter(i => !i.isRead).length})`, icon: Mail },
+            { id: 'projects', label: 'Manage Projects', icon: FileText },
+            { id: 'skills', label: 'Manage Skills', icon: CheckCircle },
             { id: 'analytics', label: 'Interaction Trends', icon: BarChart3 },
             { id: 'settings', label: 'Availability Config', icon: ToggleRight }
           ].map((tab) => {
@@ -150,7 +161,7 @@ export const Dashboard = () => {
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveSubTab(tab.id as 'inbox' | 'analytics' | 'settings')}
+                onClick={() => setActiveSubTab(tab.id as any)}
                 className={`flex items-center gap-1.5 px-4.5 py-2 text-xs font-semibold rounded-xl border border-transparent cursor-pointer transition-all ${
                   isActive
                     ? 'bg-accent/10 border-accent/20 text-accent font-bold'
@@ -167,6 +178,9 @@ export const Dashboard = () => {
         {/* TAB WORKSPACE */}
         <div className="bg-white dark:bg-darkcard border border-slate-200 dark:border-zinc-800 p-6 rounded-2xl shadow-sm min-h-[350px] flex flex-col gap-6">
           
+          {activeSubTab === 'projects' && <AdminProjects />}
+          {activeSubTab === 'skills' && <AdminSkills />}
+
           {/* A. INBOX TAB */}
           {activeSubTab === 'inbox' && (
             <div className="flex flex-col gap-4">

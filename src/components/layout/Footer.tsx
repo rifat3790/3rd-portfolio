@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowUp, Heart } from 'lucide-react';
 import { usePortfolioStore } from '../../store/usePortfolioStore';
+import { useTranslation } from '../../hooks/useTranslation';
 import { Button } from '../ui/Button';
 
 export const Footer = () => {
   const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { addNotification, incrementAnalytics } = usePortfolioStore();
+  const { language } = useTranslation();
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,9 +19,31 @@ export const Footer = () => {
       return;
     }
     
-    // Success subscription simulation
-    addNotification('Thanks for subscribing to our newsletter! 🚀', 'success', 'Subscription Saved');
-    setEmail('');
+    setIsSubmitting(true);
+
+    fetch('https://formsubmit.co/ajax/mdrifayethossen@gmail.com', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json'
+      },
+      body: new URLSearchParams({
+        email,
+        _subject: `New Newsletter Subscription from ${email}`,
+        _autoresponse: "Thank you for subscribing to my newsletter! You'll receive my latest tech insights and updates soon. Best regards, Md. Refayet Hossen"
+      })
+    })
+    .then(response => response.json())
+    .then(() => {
+      addNotification('Thanks for subscribing to our newsletter! 🚀', 'success', 'Subscription Saved');
+      setEmail('');
+    })
+    .catch(() => {
+      addNotification('Subscription failed. Please try again.', 'error', 'Error');
+    })
+    .finally(() => {
+      setIsSubmitting(false);
+    });
   };
 
   const handleDownloadResume = () => {
@@ -26,7 +51,7 @@ export const Footer = () => {
     addNotification('CV download started!', 'success', 'CV Downloaded');
     const link = document.createElement('a');
     link.href = '/resume.pdf';
-    link.download = 'Refayet_Hossen_CV.pdf';
+    link.download = 'Md_Refayet_Hossen_CV.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -54,7 +79,9 @@ export const Footer = () => {
               <span>REFAYET<span className="text-accent">.</span></span>
             </Link>
             <p className="text-xs text-slate-500 dark:text-zinc-500 leading-relaxed max-w-sm mt-1">
-              Senior Full Stack Architect & Shopify Specialist designing world-class SaaS frontends, headless commerce models, and custom React + TS solutions.
+              {language === 'en' 
+                ? 'Senior Full Stack Architect & Shopify Specialist designing world-class SaaS frontends, headless commerce models, and custom React + TS solutions.' 
+                : 'সিনিয়র ফুল স্ট্যাক আর্কিটেক্ট ও শপিফাই স্পেশালিস্ট। বিশ্বমানের সাস (SaaS) ফ্রন্টএন্ড, হেডলেস কমার্স মডেল এবং কাস্টম রিঅ্যাক্ট অ্যাপ্লিকেশন ডেভেলপমেন্টে অভিজ্ঞ।'}
             </p>
             <div className="flex gap-3 mt-2">
               <a 
@@ -88,20 +115,20 @@ export const Footer = () => {
           <div className="col-span-1 md:col-span-4 grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-3">
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 font-display">
-                Explore
+                {language === 'en' ? 'Explore' : 'এক্সপ্লোর'}
               </span>
-              <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className="text-left text-xs text-slate-500 dark:text-zinc-400 hover:text-accent dark:hover:text-accent transition-colors">About Journey</button>
-              <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('skills')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className="text-left text-xs text-slate-500 dark:text-zinc-400 hover:text-accent dark:hover:text-accent transition-colors">Skills Matrix</button>
-              <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className="text-left text-xs text-slate-500 dark:text-zinc-400 hover:text-accent dark:hover:text-accent transition-colors">Portfolio Case Studies</button>
-              <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className="text-left text-xs text-slate-500 dark:text-zinc-400 hover:text-accent dark:hover:text-accent transition-colors">Hire Refayet</button>
+              <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className="text-left text-xs text-slate-500 dark:text-zinc-400 hover:text-accent dark:hover:text-accent transition-colors">{language === 'en' ? 'About Journey' : 'সম্পর্কে'}</button>
+              <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('skills')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className="text-left text-xs text-slate-500 dark:text-zinc-400 hover:text-accent dark:hover:text-accent transition-colors">{language === 'en' ? 'Skills Matrix' : 'দক্ষতা'}</button>
+              <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className="text-left text-xs text-slate-500 dark:text-zinc-400 hover:text-accent dark:hover:text-accent transition-colors">{language === 'en' ? 'Portfolio Case Studies' : 'প্রোজেক্টস'}</button>
+              <button onClick={() => { navigate('/'); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className="text-left text-xs text-slate-500 dark:text-zinc-400 hover:text-accent dark:hover:text-accent transition-colors">{language === 'en' ? 'Hire Refayet' : 'যোগাযোগ'}</button>
             </div>
             <div className="flex flex-col gap-3">
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 font-display">
-                Utilities
+                {language === 'en' ? 'Utilities' : 'ইউটিলিটিস'}
               </span>
-              <Link to="/resume" className="text-xs text-slate-500 dark:text-zinc-400 hover:text-accent dark:hover:text-accent transition-colors">ATS CV Builder</Link>
-              <Link to="/blog" className="text-xs text-slate-500 dark:text-zinc-400 hover:text-accent dark:hover:text-accent transition-colors">Tech Blog</Link>
-              <button onClick={handleDownloadResume} className="text-left text-xs text-slate-500 dark:text-zinc-400 hover:text-accent dark:hover:text-accent transition-colors">Download CV</button>
+              <Link to="/resume" className="text-xs text-slate-500 dark:text-zinc-400 hover:text-accent dark:hover:text-accent transition-colors">{language === 'en' ? 'ATS CV Builder' : 'সিভি বিল্ডার'}</Link>
+              <Link to="/blog" className="text-xs text-slate-500 dark:text-zinc-400 hover:text-accent dark:hover:text-accent transition-colors">{language === 'en' ? 'Tech Blog' : 'টেক ব্লগ'}</Link>
+              <button onClick={handleDownloadResume} className="text-left text-xs text-slate-500 dark:text-zinc-400 hover:text-accent dark:hover:text-accent transition-colors">{language === 'en' ? 'Download CV' : 'সিভি ডাউনলোড'}</button>
               <Link to="/admin" className="text-xs text-slate-500 dark:text-zinc-400 hover:text-accent dark:hover:text-accent transition-colors">Admin Portal</Link>
             </div>
           </div>
@@ -109,21 +136,24 @@ export const Footer = () => {
           {/* Newsletter Box */}
           <div className="col-span-1 md:col-span-4 flex flex-col gap-3.5">
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500 font-display">
-              Join Newsletter
+              {language === 'en' ? 'Join Newsletter' : 'নিউজলেটারে যোগ দিন'}
             </span>
             <p className="text-xs text-slate-500 dark:text-zinc-400 leading-relaxed">
-              Get technical insights, web optimization templates, and modern React guidelines straight to your inbox.
+              {language === 'en' ? 'Get technical insights, web optimization templates, and modern React guidelines straight to your inbox.' : 'টেকনিক্যাল ইনসাইট, ওয়েব অপ্টিমাইজেশন টেমপ্লেট এবং মডার্ন রিঅ্যাক্ট গাইডলাইনস সরাসরি আপনার ইনবক্সে পান।'}
             </p>
             <form onSubmit={handleSubscribe} className="flex gap-2 w-full mt-1">
               <input
+                required
                 type="email"
                 placeholder="developer@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="flex-1 px-3 py-2 text-xs rounded-xl bg-white dark:bg-zinc-900 border border-slate-300 dark:border-zinc-800 focus:outline-none focus:border-accent text-slate-800 dark:text-zinc-100 placeholder:text-slate-400 dark:placeholder:text-zinc-600"
               />
-              <Button type="submit" variant="primary" size="sm" className="!py-2">
-                Subscribe
+              <Button type="submit" variant="primary" size="sm" className="!py-2" disabled={isSubmitting}>
+                {isSubmitting 
+                  ? (language === 'en' ? 'Sending...' : 'পাঠানো হচ্ছে...') 
+                  : (language === 'en' ? 'Subscribe' : 'সাবস্ক্রাইব')}
               </Button>
             </form>
           </div>
@@ -133,7 +163,7 @@ export const Footer = () => {
         {/* Separator / Copy / Scroll button */}
         <div className="pt-8 border-t border-slate-200 dark:border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-[11px] text-slate-500 dark:text-zinc-500 flex items-center gap-1">
-            <span>© {new Date().getFullYear()} Refayet Hossen. Handcrafted with</span>
+            <span>© {new Date().getFullYear()} Md. Refayet Hossen. Handcrafted with</span>
             <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
             <span>in React & TS.</span>
           </div>
@@ -142,7 +172,7 @@ export const Footer = () => {
             onClick={scrollToTop}
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs text-slate-500 hover:text-slate-800 dark:text-zinc-400 dark:hover:text-zinc-200 hover:bg-slate-200/50 dark:hover:bg-zinc-800/50 transition-all group cursor-pointer border border-transparent hover:border-slate-300 dark:hover:border-zinc-800"
           >
-            <span>Back to top</span>
+            <span>{language === 'en' ? 'Back to top' : 'উপরে যান'}</span>
             <ArrowUp className="w-3.5 h-3.5 group-hover:-translate-y-0.5 transition-transform" />
           </button>
         </div>
